@@ -1,0 +1,45 @@
+{
+  "name": "vue3-vite-naiveui-template",
+  "version": "0.0.1",
+  "scripts": {
+    "dev": "vite",
+    "build": "vue-tsc --noEmit && vite build",
+    "preview": "vite preview --port 5050",
+    "typecheck": "vue-tsc --noEmit",
+    "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore"
+  },
+  "dependencies": {
+    "@headlessui/vue": "^1.6.3",
+    "@heroicons/vue": "^1.0.6",
+    "@vicons/ionicons5": "^0.12.0",
+    "@vueuse/core": "^8.5.0",
+    "autoprefixer": "^10.4.7",
+    "axios": "^0.27.2",
+    "mosha-vue-toastify": "^1.0.23",
+    "naive-ui": "^2.29.0",
+    "nprogress": "^0.2.0",
+    "pinia": "^2.0.13",
+    "postcss": "^8.4.14",
+    "sass": "^1.52.1",
+    "vfonts": "^0.0.3",
+    "vue": "^3.2.33",
+    "vue-router": "^4.0.14"
+  },
+  "devDependencies": {
+    "@rushstack/eslint-patch": "^1.1.0",
+    "@types/node": "^16.11.27",
+    "@types/nprogress": "^0.2.0",
+    "@vitejs/plugin-vue": "^2.3.1",
+    "@vitejs/plugin-vue-jsx": "^1.3.10",
+    "@vue/eslint-config-prettier": "^7.0.0",
+    "@vue/eslint-config-typescript": "^10.0.0",
+    "@vue/tsconfig": "^0.1.3",
+    "eslint": "^8.5.0",
+    "eslint-plugin-vue": "^8.2.0",
+    "prettier": "^2.5.1",
+    "typescript": "~4.6.3",
+    "unplugin-vue-components": "^0.19.6",
+    "vite": "^2.9.5",
+    "vue-tsc": "^0.34.7"
+  }
+}
