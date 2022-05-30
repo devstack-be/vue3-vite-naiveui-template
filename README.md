@@ -16,6 +16,8 @@ This dashboard template should help get you started developing with Vue 3 in Vit
 ## Features
 
 - Authentication and authorization with a nodeJS (NestJS) back-end
+- Fetching user after a manual page refresh
+- Preloader while fetching user data
 - HTTP requests with axios
 - Authorization (JWT Token)
   - Access token
