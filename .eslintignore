@@ -1,0 +1,9 @@
+# Ignore artifacts:
+build
+dist
+node_modules
+public
+
+README.md
+CHANGELOG.md
+components.d.ts

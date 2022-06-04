@@ -1,18 +1,18 @@
 <script setup lang="ts">
-import { ref } from "vue"
-import { useNotification } from "naive-ui"
-import type { FormInst, FormRules, FormItemRule, FormItemInst } from "naive-ui"
-import { useApi } from "@/composables/useApi"
-import { useRouter } from "vue-router";
+import { ref } from 'vue'
+import { useNotification } from 'naive-ui'
+import type { FormInst, FormRules, FormItemRule, FormItemInst } from 'naive-ui'
+import { useApi } from '@/composables/useApi'
+import { useRouter } from 'vue-router'
 
 interface ModelType {
-  password: string | null;
-  confirm_password: string | null;
-  email: string | null;
-  username: string | null;
-  firstname: string | null;
-  lastname: string | null;
-  is_active: boolean;
+  password: string | null
+  confirm_password: string | null
+  email: string | null
+  username: string | null
+  firstname: string | null
+  lastname: string | null
+  is_active: boolean
 }
 
 function validatePasswordStartWith(rule: FormItemRule, value: string): boolean {
@@ -27,7 +27,7 @@ function validatePasswordSame(rule: FormItemRule, value: string): boolean {
 }
 function handlePasswordInput() {
   if (formValue.value.confirm_password) {
-    rPasswordFormItemRef.value?.validate({ trigger: "password-input" })
+    rPasswordFormItemRef.value?.validate({ trigger: 'password-input' })
   }
 }
 const api = useApi()
@@ -48,40 +48,40 @@ const formValue = ref<ModelType>({
 const rules: FormRules = {
   email: {
     required: true,
-    type: "email",
-    trigger: ["input"],
+    type: 'email',
+    trigger: ['input'],
   },
   password: {
     required: true,
-    trigger: ["input"],
+    trigger: ['input'],
   },
   username: {
     required: true,
-    trigger: ["input"],
+    trigger: ['input'],
   },
   confirm_password: [
     {
       required: true,
-      message: "Re-entered password is required",
-      trigger: ["input"],
+      message: 'Re-entered password is required',
+      trigger: ['input'],
     },
     {
       validator: validatePasswordStartWith,
-      message: "Password is not same as re-entered password!",
-      trigger: "input",
+      message: 'Password is not same as re-entered password!',
+      trigger: 'input',
     },
     {
       validator: validatePasswordSame,
-      message: "Password is not same as re-entered password!",
-      trigger: ["input", "password-input"],
+      message: 'Password is not same as re-entered password!',
+      trigger: ['input', 'password-input'],
     },
   ],
   firstname: {
     required: false,
-    trigger: ["input"],
+    trigger: ['input'],
   },
   lastname: {
-    trigger: ["input"],
+    trigger: ['input'],
   },
   is_active: {
     required: true,
@@ -95,14 +95,14 @@ const handleValidateButtonClick = async (e: MouseEvent) => {
       formLoading.value = false
     } else {
       api
-        .post("http://localhost:5000/users", formValue.value)
+        .post('http://localhost:5000/users', formValue.value)
         .then((response) => {
           notification.success({
             duration: 5000,
-            content: "Users",
+            content: 'Users',
             meta: response.data.message,
           })
-          router.push({ name: "users" });
+          router.push({ name: 'users' })
         })
         .catch((error) => console.log(error))
         .then(() => (formLoading.value = false))
@@ -114,7 +114,7 @@ const handleValidateButtonClick = async (e: MouseEvent) => {
 <template>
   <n-space vertical>
     <n-form ref="formRef" :model="formValue" :rules="rules">
-      <n-grid :span="24" :x-gap="24">
+      <n-grid :x-gap="24">
         <n-form-item-gi :span="12" label="E-mail" path="email">
           <n-input
             v-model:value="formValue.email"
@@ -160,9 +160,7 @@ const handleValidateButtonClick = async (e: MouseEvent) => {
           <n-input v-model:value="formValue.lastname" placeholder="" />
         </n-form-item-gi>
         <n-form-item-gi :span="12" label="Activated" path="is_active">
-          <n-checkbox v-model:checked="formValue.is_active">
-            Activated
-          </n-checkbox>
+          <n-checkbox v-model:checked="formValue.is_active"> Activated </n-checkbox>
         </n-form-item-gi>
       </n-grid>
       <n-row :gutter="[0, 24]">

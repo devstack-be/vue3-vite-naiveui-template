@@ -29,11 +29,12 @@ export function createApi() {
       return response
     },
     (error) => {
-      const userStore = useUserStore();
       //401 Unauthorized (not auth); 419 Session expired
       if ([401, 419].includes(error.response?.status)) {
+        const userStore = useUserStore();
         userStore.logoutUser()
       }
+      return Promise.reject(error)
     }
   )
   return api;

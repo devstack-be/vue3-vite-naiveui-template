@@ -1,54 +1,62 @@
 <script setup lang="ts">
-import { ref, onMounted, h } from "vue"
-import { NButton, NTag, useNotification } from "naive-ui"
-import Icon from "@/components/Icon.vue"
-import { useRouter } from "vue-router"
-import { useApi } from "@/composables/useApi"
+import { ref, onMounted, h } from 'vue'
+import { NButton, NTag, useNotification, type DataTableRowKey } from 'naive-ui'
+import Icon from '@/components/Icon.vue'
+import { useRouter } from 'vue-router'
+import { useApi } from '@/composables/useApi'
+import type { DataTableColumns } from 'naive-ui'
+
+type RowData = {
+  id: number
+  email: string
+  username: string
+  is_active: boolean
+}
 
 const api = useApi()
 const router = useRouter()
-const notification = useNotification();
+const notification = useNotification()
 const deleteUser = async (id: number) => {
   api.delete(`http://localhost:5000/users/${id}`).then((response) => {
     notification.success({
       duration: 5000,
-      content: "Users",
+      content: 'Users',
       meta: response.data.message,
     })
     data.value.splice(
       data.value.findIndex((e) => e.id === id),
       1
-    );
+    )
   })
 }
-const columns = [
+const columns:DataTableColumns<RowData> = [
   {
-    type: "selection",
+    type: 'selection',
   },
   {
-    title: "Email",
-    key: "email",
-    sorter: "default",
+    title: 'Email',
+    key: 'email',
+    sorter: 'default',
   },
   {
-    title: "Username",
-    key: "username",
-    sorter: "default",
+    title: 'Username',
+    key: 'username',
+    sorter: 'default',
   },
   {
-    title: "Active",
-    key: "is_active",
+    title: 'Active',
+    key: 'is_active',
     render(row) {
       return h(
         NTag,
-        { size: "small", type: row.is_active ? "success" : "error" },
-        { default: () => (row.is_active ? "Activated" : "Disabled") }
+        { size: 'small', type: row.is_active ? 'success' : 'error' },
+        { default: () => (row.is_active ? 'Activated' : 'Disabled') }
       )
     },
   },
   {
-    title: "Action",
-    key: "actions",
+    title: 'Action',
+    key: 'actions',
     render(row) {
       return [
         h(
@@ -56,47 +64,44 @@ const columns = [
           {
             circle: true,
             quaternary: true,
-            onClick: () =>
-              router.push({ name: "users.edit", params: { id: row.id } }),
+            onClick: () => router.push({ name: 'users.edit', params: { id: row.id } }),
           },
-          { icon: () => h(Icon, { type: "edit" }) }
+          { icon: () => h(Icon, { type: 'edit' }) }
         ),
         h(
           NButton,
           {
-            type: "error",
+            type: 'error',
             circle: true,
             tertiary: true,
             onClick: () => deleteUser(row.id),
           },
-          { icon: () => h(Icon, { type: "destroy" }) }
+          { icon: () => h(Icon, { type: 'destroy' }) }
         ),
       ]
     },
   },
 ]
-const handleCheck = (rowKeys) => {
+const handleCheck = (rowKeys: DataTableRowKey[]) => {
   checkedRowKeys.value = rowKeys
 }
 const pagination = {
   pageSize: 5,
 }
-const checkedRowKeys = ref([])
-const data = ref([])
-const filteredData = ref([])
+const checkedRowKeys = ref<DataTableRowKey[]>([])
+const data = ref<RowData[] | []>([])
+const filteredData = ref<RowData[] | []>([])
 const searchValue = ref()
 const searchTrigger = async () => {
   filteredData.value = data.value.filter(
-    (e) =>
-      e.username.includes(searchValue.value) ||
-      e.email.includes(searchValue.value)
+    (e) => e.username.includes(searchValue.value) || e.email.includes(searchValue.value)
   )
 }
 onMounted(() => {
-  api.get("http://localhost:5000/users").then((response) => {
+  api.get('http://localhost:5000/users').then((response) => {
     data.value = response.data
     filteredData.value = response.data
-  });
+  })
 })
 </script>
 <template>

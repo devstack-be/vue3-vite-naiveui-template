@@ -1,67 +1,67 @@
 <script setup lang="ts">
-import { ref } from "vue";
-import { useNotification } from "naive-ui";
-import type { FormInst, FormRules, FormValidationError } from "naive-ui";
-import { useApi } from "@/composables/useApi";
-import { useUserStore } from "@/stores/user";
-import { useRouter } from "vue-router";
+import { ref } from 'vue'
+import { useNotification } from 'naive-ui'
+import type { FormInst, FormRules, FormValidationError } from 'naive-ui'
+import { useApi } from '@/composables/useApi'
+import { useUserStore } from '@/stores/user'
+import { useRouter } from 'vue-router'
 
 interface ModelType {
-  email: string | null;
-  password: string | null;
+  email: string | null
+  password: string | null
 }
 
-const api = useApi();
-const router = useRouter();
-const notification = useNotification();
-const formRef = ref<FormInst | null>(null);
-const formLoading = ref(false);
-const userStore = useUserStore();
+const api = useApi()
+const router = useRouter()
+const notification = useNotification()
+const formRef = ref<FormInst | null>(null)
+const formLoading = ref(false)
+const userStore = useUserStore()
 const formValue = ref<ModelType>({
   email: null,
   password: null,
-});
+})
 const rules: FormRules = {
   email: {
     required: true,
-    type: "email",
-    trigger: ["input"],
+    type: 'email',
+    trigger: ['input'],
   },
   password: {
     required: true,
-    trigger: ["input"],
+    trigger: ['input'],
   },
-};
+}
 const handleValidateButtonClick = async (e: MouseEvent) => {
-  e.preventDefault();
-  formLoading.value = true;
+  e.preventDefault()
+  formLoading.value = true
   formRef.value?.validate((errors: Array<FormValidationError> | undefined) => {
     if (!errors) {
       api
-        .post("auth/login", formValue.value)
+        .post('auth/login', formValue.value)
         .then((response) => {
-          userStore.setLoggedIn(response.data);
+          userStore.setLoggedIn(response.data)
           notification.success({
             closable: true,
             duration: 5000,
-            content: "Auth",
+            content: 'Auth',
             meta: `Welcome back, ${response.data.user.username}`,
-          });
-          router.push("/");
+          })
+          router.push('/')
         })
         .catch((error) => {
           notification.error({
             duration: 3000,
-            content: "Auth",
-            meta: error.response?.data?.message ?? "Unknown error",
-          });
+            content: 'Auth',
+            meta: error.response?.data?.message ?? 'Unknown error',
+          })
         })
-        .then(() => (formLoading.value = false));
+        .then(() => (formLoading.value = false))
     } else {
-      formLoading.value = false;
+      formLoading.value = false
     }
-  });
-};
+  })
+}
 </script>
 
 <template>
@@ -89,6 +89,7 @@ const handleValidateButtonClick = async (e: MouseEvent) => {
           />
         </n-form-item-row>
         <n-button
+          attr-type="submit"
           type="primary"
           size="large"
           block

@@ -1,21 +1,43 @@
-/* eslint-env node */
-require("@rushstack/eslint-patch/modern-module-resolution")
-
 module.exports = {
   root: true,
   extends: [
+    "plugin:@typescript-eslint/eslint-recommended",
     "plugin:vue/vue3-recommended",
-    "eslint:recommended",
-    "@vue/eslint-config-typescript/recommended",
+    "plugin:vuejs-accessibility/recommended",
     "prettier",
-    "@vue/eslint-config-prettier",
   ],
+  plugins: ["@typescript-eslint", "prettier-vue"],
   env: {
     "vue/setup-compiler-macros": true,
   },
   rules: {
-    semi: ["error", "never"],
-    quotes: ["error", "double"],
-    "vue/multi-word-component-names": 0,
+    'no-console': process.env.NODE_ENV === 'production' ? 'error' : 'off',
+    'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off',
+    'no-unused-vars': 'off',
+    '@typescript-eslint/no-unused-vars': ['error'],
   },
-}
+  overrides: [
+    {
+      files: ['*.vue'],
+      extends: [
+        'plugin:@typescript-eslint/eslint-recommended',
+        'plugin:vue/vue3-recommended',
+        'plugin:vuejs-accessibility/recommended',
+        'plugin:prettier-vue/recommended',
+        'prettier',
+      ],
+      rules: {
+        'no-console': process.env.NODE_ENV === 'production' ? 'error' : 'off',
+        'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off',
+        'vue/script-setup-uses-vars': 'error',
+        'vue/multi-word-component-names': 'off',
+        'no-unused-vars': 'off',
+        '@typescript-eslint/no-unused-vars': ['error'],
+
+        'vuejs-accessibility/form-control-has-label': 'off',
+        'vuejs-accessibility/label-has-for': 'off',
+        'vuejs-accessibility/anchor-has-content': 'off',
+      },
+    },
+  ],
+};
