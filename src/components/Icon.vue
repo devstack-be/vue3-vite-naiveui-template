@@ -30,7 +30,12 @@ import {
   AlertCircleOutline as fallback,
 } from "@vicons/ionicons5";
 
+import { Pencil as edit, 
+Trash as destroy } from "@vicons/tabler";
+
 const icons = {
+  destroy,
+  edit,
   moon,
   sunny,
   create,
