@@ -85,6 +85,7 @@ const fetchUser = async () => {
     .get(`http://localhost:5000/users/${route.params.id}`)
     .then((response) => {
       user.value = response.data
+      previewFileList.value[0].url = `http://localhost:5000/avatars/${user.value.avatar}`
     })
     .catch((error) => {
       console.log(error)
@@ -98,7 +99,7 @@ const previewFileList = ref<UploadFileInfo[]>([
     id: 'avatar',
     name: 'avatar.png',
     status: 'finished',
-    url: '/images/avatars/svg/1.svg',
+    url: null
   },
 ])
 const customRequest = ({
@@ -141,7 +142,6 @@ const customRequest = ({
 
 <template>
   <n-space v-if="user" vertical>
-    {{ user }}
     <n-upload
       :max="1"
       name="avatar"
