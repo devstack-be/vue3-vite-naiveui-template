@@ -1,8 +1,9 @@
 <script setup lang="ts">
-import { ref } from "vue";
-import { useNotification } from "naive-ui";
-import type { FormInst, FormRules, FormItemRule, FormItemInst } from "naive-ui";
-import { useApi } from "@/composables/useApi";
+import { ref } from "vue"
+import { useNotification } from "naive-ui"
+import type { FormInst, FormRules, FormItemRule, FormItemInst } from "naive-ui"
+import { useApi } from "@/composables/useApi"
+import { useRouter } from "vue-router";
 
 interface ModelType {
   password: string | null;
@@ -19,21 +20,22 @@ function validatePasswordStartWith(rule: FormItemRule, value: string): boolean {
     !!formValue.value.password &&
     formValue.value.password.startsWith(value) &&
     formValue.value.password.length >= value.length
-  );
+  )
 }
 function validatePasswordSame(rule: FormItemRule, value: string): boolean {
-  return value === formValue.value.password;
+  return value === formValue.value.password
 }
 function handlePasswordInput() {
   if (formValue.value.confirm_password) {
-    rPasswordFormItemRef.value?.validate({ trigger: "password-input" });
+    rPasswordFormItemRef.value?.validate({ trigger: "password-input" })
   }
 }
-const api = useApi();
-const notification = useNotification();
-const rPasswordFormItemRef = ref<FormItemInst | null>(null);
-const formRef = ref<FormInst | null>(null);
-const formLoading = ref(false);
+const api = useApi()
+const router = useRouter()
+const notification = useNotification()
+const rPasswordFormItemRef = ref<FormItemInst | null>(null)
+const formRef = ref<FormInst | null>(null)
+const formLoading = ref(false)
 const formValue = ref<ModelType>({
   password: null,
   confirm_password: null,
@@ -42,7 +44,7 @@ const formValue = ref<ModelType>({
   firstname: null,
   lastname: null,
   is_active: false,
-});
+})
 const rules: FormRules = {
   email: {
     required: true,
@@ -84,13 +86,13 @@ const rules: FormRules = {
   is_active: {
     required: true,
   },
-};
+}
 const handleValidateButtonClick = async (e: MouseEvent) => {
-  e.preventDefault();
-  formLoading.value = true;
+  e.preventDefault()
+  formLoading.value = true
   formRef.value?.validate((errors) => {
     if (errors) {
-      formLoading.value = false;
+      formLoading.value = false
     } else {
       api
         .post("http://localhost:5000/users", formValue.value)
@@ -99,13 +101,14 @@ const handleValidateButtonClick = async (e: MouseEvent) => {
             duration: 5000,
             content: "Users",
             meta: response.data.message,
-          });
+          })
+          router.push({ name: "users" });
         })
         .catch((error) => console.log(error))
-        .then(() => (formLoading.value = false));
+        .then(() => (formLoading.value = false))
     }
-  });
-};
+  })
+}
 </script>
 
 <template>
