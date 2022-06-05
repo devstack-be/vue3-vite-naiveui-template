@@ -1,64 +1,91 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useNotification } from 'naive-ui'
-import type { FormInst, FormRules, FormValidationError } from 'naive-ui'
-import { useApi } from '@/composables/useApi'
-import { useUserStore } from '@/stores/user'
+import type { FormInst, FormRules, FormItemRule, FormItemInst } from 'naive-ui'
+import { parseErrors, useApi } from '@/composables/useApi'
 import { useRouter } from 'vue-router'
 
 interface ModelType {
-  email: string | null
   password: string | null
+  confirm_password: string | null
+  email: string | null
+  username: string | null
 }
 
+function validatePasswordStartWith(rule: FormItemRule, value: string): boolean {
+  return (
+    !!formValue.value.password &&
+    formValue.value.password.startsWith(value) &&
+    formValue.value.password.length >= value.length
+  )
+}
+function validatePasswordSame(rule: FormItemRule, value: string): boolean {
+  return value != formValue.value.password
+}
+function handlePasswordInput() {
+  if (formValue.value.confirm_password) {
+    rPasswordFormItemRef.value?.validate({ trigger: 'password-input' })
+  }
+}
 const api = useApi()
 const router = useRouter()
 const notification = useNotification()
+const rPasswordFormItemRef = ref<FormItemInst | null>(null)
 const formRef = ref<FormInst | null>(null)
 const formLoading = ref(false)
-const userStore = useUserStore()
 const formValue = ref<ModelType>({
-  email: null,
   password: null,
+  confirm_password: null,
+  email: null,
+  username: null,
 })
 const rules: FormRules = {
   email: {
-    required: true,
+    required: false,
     type: 'email',
     trigger: ['input'],
   },
   password: {
+    required: false,
+    trigger: ['input'],
+  },
+  username: {
     required: true,
     trigger: ['input'],
   },
+  confirm_password: [
+    {
+      required: true,
+      message: 'Re-entered password is required',
+      trigger: ['input'],
+    },
+  ],
 }
 const handleValidateButtonClick = async (e: MouseEvent) => {
   e.preventDefault()
   formLoading.value = true
-  formRef.value?.validate((errors: Array<FormValidationError> | undefined) => {
-    if (!errors) {
+  formRef.value?.validate((errors) => {
+    if (errors) {
+      formLoading.value = false
+    } else {
       api
-        .post('auth/login', formValue.value)
+        .post('http://localhost:5000/auth/register', formValue.value)
         .then((response) => {
-          userStore.setLoggedIn(response.data)
           notification.success({
-            closable: true,
             duration: 5000,
             content: 'Auth',
-            meta: `Welcome back, ${response.data.user.username}`,
+            meta: response.data.message,
           })
-          router.push('/')
+          router.push({ name: 'login' })
         })
         .catch((error) => {
           notification.error({
-            duration: 3000,
+            duration: 5000,
             content: 'Auth',
-            meta: error.response?.data?.message ?? 'Unknown error',
+            meta: error
           })
         })
         .then(() => (formLoading.value = false))
-    } else {
-      formLoading.value = false
     }
   })
 }
@@ -72,48 +99,48 @@ const handleValidateButtonClick = async (e: MouseEvent) => {
   <n-card size="large" style="--padding-bottom: 30px">
     <n-h2 style="--font-weight: 400">Register</n-h2>
     <n-space vertical>
-          <n-form ref="formRef" :model="formValue" :rules="rules">
-      <n-grid :x-gap="24">
-        <n-form-item-gi :span="12" label="E-mail" path="email">
-          <n-input
-            v-model:value="formValue.email"
-            placeholder=""
-            :input-props="{ type: 'email', autocomplete: 'off' }"
-          />
-        </n-form-item-gi>
-        <n-form-item-gi :span="12" label="Username" path="username">
-          <n-input
-            v-model:value="formValue.username"
-            placeholder=""
-            :input-props="{ autocomplete: 'none' }"
-          />
-        </n-form-item-gi>
-        <n-form-item-gi :span="12" path="password" label="Password">
-          <n-input
-            v-model:value="formValue.password"
-            placeholder=""
-            type="password"
-            @input="handlePasswordInput"
-            @keydown.enter.prevent
-          />
-        </n-form-item-gi>
-        <n-form-item-gi
-          ref="rPasswordFormItemRef"
-          :span="12"
-          first
-          path="confirm_password"
-          label="Re-enter Password"
-        >
-          <n-input
-            v-model:value="formValue.confirm_password"
-            placeholder=""
-            :disabled="!formValue.password"
-            type="password"
-            @keydown.enter.prevent
-          />
-        </n-form-item-gi>
-      </n-grid>
-      <n-button
+      <n-form ref="formRef" :model="formValue" :rules="rules">
+        <n-grid :x-gap="24">
+          <n-form-item-gi :span="12" label="E-mail" path="email">
+            <n-input
+              v-model:value="formValue.email"
+              placeholder=""
+              :input-props="{ type: 'email', autocomplete: 'off' }"
+            />
+          </n-form-item-gi>
+          <n-form-item-gi :span="12" label="Username" path="username">
+            <n-input
+              v-model:value="formValue.username"
+              placeholder=""
+              :input-props="{ autocomplete: 'none' }"
+            />
+          </n-form-item-gi>
+          <n-form-item-gi :span="12" path="password" label="Password">
+            <n-input
+              v-model:value="formValue.password"
+              placeholder=""
+              type="password"
+              @input="handlePasswordInput"
+              @keydown.enter.prevent
+            />
+          </n-form-item-gi>
+          <n-form-item-gi
+            ref="rPasswordFormItemRef"
+            :span="12"
+            first
+            path="confirm_password"
+            label="Re-enter Password"
+          >
+            <n-input
+              v-model:value="formValue.confirm_password"
+              placeholder=""
+              :disabled="!formValue.password"
+              type="password"
+              @keydown.enter.prevent
+            />
+          </n-form-item-gi>
+        </n-grid>
+        <n-button
           attr-type="submit"
           type="primary"
           size="large"
@@ -126,17 +153,17 @@ const handleValidateButtonClick = async (e: MouseEvent) => {
           </template>
           Register</n-button
         >
-    </n-form>
+      </n-form>
     </n-space>
     <n-space justify="center">
       <n-button
-    text
-    tag="a"
-    @click.prevent="router.push({name: 'login'})"
-    type="primary"
-  >
-    Return to login
-  </n-button>
+        text
+        tag="a"
+        @click.prevent="router.push({ name: 'login' })"
+        type="primary"
+      >
+        Back to login
+      </n-button>
     </n-space>
   </n-card>
 </template>

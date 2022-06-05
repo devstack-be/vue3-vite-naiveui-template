@@ -34,6 +34,10 @@ export function createApi() {
         const userStore = useUserStore();
         userStore.logoutUser()
       }
+      if ([400].includes(error.response?.status)) {
+        if(error.response?.data?.message)
+          return Promise.reject(Array.isArray(error.response.data.message) ? error.response.data.message[0] : error.response.data.message)
+      }
       return Promise.reject(error)
     }
   )
@@ -45,4 +49,21 @@ export function useApi() {
     createApi();
   }
   return api;
+}
+
+export function parseErrors(error: any) {
+  let errors = 'Unkown error'
+  if (!error.response) {
+    return errors
+  }
+  console.log(error)
+  if (error.response.data.message && Array.isArray(error.response.data.message)) {
+    errors = ''
+    error.response.data.message.forEach((element: string) => {
+        errors += `
+        ${element}
+        `
+    })
+  }
+  return errors
 }

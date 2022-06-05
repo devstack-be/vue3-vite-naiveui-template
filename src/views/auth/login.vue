@@ -110,7 +110,7 @@ const handleValidateButtonClick = async (e: MouseEvent) => {
     @click.prevent="router.push({name: 'register'})"
     type="primary"
   >
-    Register
+    Don't have an account?
   </n-button>
     </n-space>
   </n-card>
