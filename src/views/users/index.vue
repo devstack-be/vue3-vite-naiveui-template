@@ -10,7 +10,7 @@ type RowData = {
   id: number
   email: string
   username: string
-  is_active: boolean
+  confirmed: boolean
 }
 
 const api = useApi()
@@ -45,12 +45,12 @@ const columns:DataTableColumns<RowData> = [
   },
   {
     title: 'Active',
-    key: 'is_active',
+    key: 'confirmed',
     render(row) {
       return h(
         NTag,
-        { size: 'small', type: row.is_active ? 'success' : 'error' },
-        { default: () => (row.is_active ? 'Activated' : 'Disabled') }
+        { size: 'small', type: row.confirmed ? 'success' : 'error' },
+        { default: () => (row.confirmed ? 'Confirmed' : 'Disabled') }
       )
     },
   },
@@ -98,7 +98,7 @@ const searchTrigger = async () => {
   )
 }
 onMounted(() => {
-  api.get('http://localhost:5000/users').then((response) => {
+  api.get('users').then((response) => {
     data.value = response.data
     filteredData.value = response.data
   })

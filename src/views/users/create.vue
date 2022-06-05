@@ -12,7 +12,7 @@ interface ModelType {
   username: string | null
   firstname: string | null
   lastname: string | null
-  is_active: boolean
+  confirmed: boolean
 }
 
 function validatePasswordStartWith(rule: FormItemRule, value: string): boolean {
@@ -43,7 +43,7 @@ const formValue = ref<ModelType>({
   username: null,
   firstname: null,
   lastname: null,
-  is_active: false,
+  confirmed: false,
 })
 const rules: FormRules = {
   email: {
@@ -83,7 +83,7 @@ const rules: FormRules = {
   lastname: {
     trigger: ['input'],
   },
-  is_active: {
+  confirmed: {
     required: true,
   },
 }
@@ -159,8 +159,8 @@ const handleValidateButtonClick = async (e: MouseEvent) => {
         <n-form-item-gi :span="12" label="Lastname" path="lastname">
           <n-input v-model:value="formValue.lastname" placeholder="" />
         </n-form-item-gi>
-        <n-form-item-gi :span="12" label="Activated" path="is_active">
-          <n-checkbox v-model:checked="formValue.is_active"> Activated </n-checkbox>
+        <n-form-item-gi :span="12" label="Confirmed" path="confirmed">
+          <n-checkbox v-model:checked="formValue.confirmed"> Confirmed </n-checkbox>
         </n-form-item-gi>
       </n-grid>
       <n-row :gutter="[0, 24]">

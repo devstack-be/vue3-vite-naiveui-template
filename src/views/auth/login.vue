@@ -7,7 +7,7 @@ import { useUserStore } from '@/stores/user'
 import { useRouter } from 'vue-router'
 
 interface ModelType {
-  email: string | null
+  identifier: string | null
   password: string | null
 }
 
@@ -18,11 +18,11 @@ const formRef = ref<FormInst | null>(null)
 const formLoading = ref(false)
 const userStore = useUserStore()
 const formValue = ref<ModelType>({
-  email: null,
+  identifier: null,
   password: null,
 })
 const rules: FormRules = {
-  email: {
+  identifier: {
     required: true,
     type: 'email',
     trigger: ['input'],
@@ -38,8 +38,9 @@ const handleValidateButtonClick = async (e: MouseEvent) => {
   formRef.value?.validate((errors: Array<FormValidationError> | undefined) => {
     if (!errors) {
       api
-        .post('auth/login', formValue.value)
+        .post('auth/local', formValue.value)
         .then((response) => {
+          console.log(response)
           userStore.setLoggedIn(response.data)
           notification.success({
             closable: true,
@@ -73,9 +74,9 @@ const handleValidateButtonClick = async (e: MouseEvent) => {
     <n-h2 style="--font-weight: 400">Sign-in</n-h2>
     <n-space vertical>
       <n-form ref="formRef" :model="formValue" :rules="rules">
-        <n-form-item-row label="E-mail" path="email">
+        <n-form-item-row label="E-mail" path="identifier">
           <n-input
-            v-model:value="formValue.email"
+            v-model:value="formValue.identifier"
             placeholder=""
             :input-props="{ type: 'email', autocomplete: 'off' }"
           />

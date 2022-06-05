@@ -9,7 +9,7 @@ interface ModelType {
   username: string | null
   firstname: string | null
   lastname: string | null
-  is_active: boolean
+  confirmed: boolean
 }
 
 const api = useApi()
@@ -25,7 +25,7 @@ const getFormValues = (): ModelType => {
     username: user.value ? user.value.username : null,
     firstname: user.value ? user.value.firstname : null,
     lastname: user.value ? user.value.lastname : null,
-    is_active: user.value ? user.value.is_active : null,
+    confirmed: user.value ? user.value.confirmed : null,
   }
 }
 const formValue = ref<ModelType>(getFormValues())
@@ -46,7 +46,7 @@ const rules: FormRules = {
   lastname: {
     trigger: ['input'],
   },
-  is_active: {
+  confirmed: {
     required: true,
   },
 }
@@ -82,10 +82,10 @@ watch(user, () => {
 })
 const fetchUser = async () => {
   api
-    .get(`http://localhost:5000/users/${route.params.id}`)
+    .get(`users/${route.params.id}`)
     .then((response) => {
       user.value = response.data
-      previewFileList.value[0].url = `http://localhost:5000/avatars/${user.value.avatar}`
+      //previewFileList.value[0].url = `http://localhost:5000/avatars/${user.value.avatar}`
     })
     .catch((error) => {
       console.log(error)
@@ -142,6 +142,7 @@ const customRequest = ({
 
 <template>
   <n-space v-if="user" vertical>
+  {{user}}
     <n-upload
       :max="1"
       name="avatar"
@@ -173,8 +174,8 @@ const customRequest = ({
         <n-form-item-gi :span="12" label="Lastname" path="lastname">
           <n-input v-model:value="formValue.lastname" placeholder="" />
         </n-form-item-gi>
-        <n-form-item-gi :span="12" label="Activated" path="is_active">
-          <n-checkbox v-model:checked="formValue.is_active"> Activated </n-checkbox>
+        <n-form-item-gi :span="12" label="Confirmed" path="confirmed">
+          <n-checkbox v-model:checked="formValue.confirmed"> Confirmed </n-checkbox>
         </n-form-item-gi>
       </n-grid>
       <n-row :gutter="[0, 24]">
