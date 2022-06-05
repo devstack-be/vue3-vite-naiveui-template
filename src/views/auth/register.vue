@@ -70,25 +70,50 @@ const handleValidateButtonClick = async (e: MouseEvent) => {
     Devstack
   </n-h1>
   <n-card size="large" style="--padding-bottom: 30px">
-    <n-h2 style="--font-weight: 400">Sign-in</n-h2>
+    <n-h2 style="--font-weight: 400">Register</n-h2>
     <n-space vertical>
-      <n-form ref="formRef" :model="formValue" :rules="rules">
-        <n-form-item-row label="E-mail" path="email">
+          <n-form ref="formRef" :model="formValue" :rules="rules">
+      <n-grid :x-gap="24">
+        <n-form-item-gi :span="12" label="E-mail" path="email">
           <n-input
             v-model:value="formValue.email"
             placeholder=""
             :input-props="{ type: 'email', autocomplete: 'off' }"
           />
-        </n-form-item-row>
-        <n-form-item-row path="password" label="Password">
+        </n-form-item-gi>
+        <n-form-item-gi :span="12" label="Username" path="username">
+          <n-input
+            v-model:value="formValue.username"
+            placeholder=""
+            :input-props="{ autocomplete: 'none' }"
+          />
+        </n-form-item-gi>
+        <n-form-item-gi :span="12" path="password" label="Password">
           <n-input
             v-model:value="formValue.password"
             placeholder=""
             type="password"
+            @input="handlePasswordInput"
             @keydown.enter.prevent
           />
-        </n-form-item-row>
-        <n-button
+        </n-form-item-gi>
+        <n-form-item-gi
+          ref="rPasswordFormItemRef"
+          :span="12"
+          first
+          path="confirm_password"
+          label="Re-enter Password"
+        >
+          <n-input
+            v-model:value="formValue.confirm_password"
+            placeholder=""
+            :disabled="!formValue.password"
+            type="password"
+            @keydown.enter.prevent
+          />
+        </n-form-item-gi>
+      </n-grid>
+      <n-button
           attr-type="submit"
           type="primary"
           size="large"
@@ -97,20 +122,20 @@ const handleValidateButtonClick = async (e: MouseEvent) => {
           @click="handleValidateButtonClick"
         >
           <template #icon>
-            <Icon type="login" />
+            <Icon type="save" />
           </template>
-          Sign in</n-button
+          Register</n-button
         >
-      </n-form>
+    </n-form>
     </n-space>
     <n-space justify="center">
       <n-button
     text
     tag="a"
-    @click.prevent="router.push({name: 'register'})"
+    @click.prevent="router.push({name: 'login'})"
     type="primary"
   >
-    Register
+    Return to login
   </n-button>
     </n-space>
   </n-card>
@@ -129,7 +154,7 @@ const handleValidateButtonClick = async (e: MouseEvent) => {
 }
 .n-card {
   margin: 0 auto;
-  max-width: 380px;
+  max-width: 700px;
   box-shadow: var(--box-shadow);
 }
 </style>

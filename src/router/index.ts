@@ -18,6 +18,12 @@ const routes = [
     meta: { requiresGuest: true, layout: "auth" },
   },
   {
+    path: "/register",
+    name: "register",
+    component: () => import("/src/views/auth/register.vue"),
+    meta: { requiresGuest: true, layout: "auth" },
+  },
+  {
     path: "/users",
     name: "users",
     // route level code-splitting
