@@ -4,6 +4,8 @@ import { onMounted, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { useNotification, type UploadCustomRequestOptions } from 'naive-ui'
 import type { FormInst, FormRules, UploadFileInfo } from 'naive-ui'
+import qs from 'qs'
+
 interface ModelType {
   email: string | null
   username: string | null
@@ -36,7 +38,7 @@ const rules: FormRules = {
     trigger: ['input'],
   },
   username: {
-    required: true,
+    required: false,
     trigger: ['input'],
   },
   firstname: {
@@ -58,20 +60,22 @@ const handleValidateButtonClick = async (e: MouseEvent) => {
       formLoading.value = false
     } else {
       api
-        .patch(`http://localhost:5000/users/${route.params.id}`, formValue.value)
+        .put(`users/${route.params.id}`, formValue.value)
         .then((response) => {
           notification.success({
             duration: 5000,
             content: 'Users',
-            meta: response.data.message,
+            meta: 'User successfully updated!'
           })
+          user.value = response.data
         })
-        .catch((error) =>
+        .catch((error) => {
           notification.error({
             duration: 5000,
             content: 'Users',
-            meta: 'Errors while updating',
+            meta: error ?? 'Unknown error'
           })
+        }
         )
         .then(() => (formLoading.value = false))
     }
@@ -81,8 +85,13 @@ watch(user, () => {
   Object.assign(formValue.value, getFormValues())
 })
 const fetchUser = async () => {
+  const query = qs.stringify({
+    populate: [
+      'avatar'
+    ]
+  })
   api
-    .get(`users/${route.params.id}`)
+    .get(`users/${route.params.id}?${query}`)
     .then((response) => {
       user.value = response.data
       //previewFileList.value[0].url = `http://localhost:5000/avatars/${user.value.avatar}`
@@ -143,15 +152,12 @@ const customRequest = ({
 <template>
   <n-space v-if="user" vertical>
   {{user}}
-    <n-upload
-      :max="1"
-      name="avatar"
-      :custom-request="customRequest"
-      :action="`http://localhost:5000/users/avatar/${route.params.id}`"
-      with-credentials
-      :default-file-list="previewFileList"
-      list-type="image-card"
-    />
+  <n-avatar
+    round
+    :size="100"
+    :src="user.avatar ? `http://localhost:1337${user.avatar.url}` : ' '"
+    fallback-src="https://07akioni.oss-cn-beijing.aliyuncs.com/07akioni.jpeg"
+  />
     <n-form ref="formRef" :model="formValue" :rules="rules">
       <n-grid :x-gap="24">
         <n-form-item-gi :span="12" label="E-mail" path="email">

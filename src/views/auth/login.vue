@@ -52,9 +52,9 @@ const handleValidateButtonClick = async (e: MouseEvent) => {
         })
         .catch((error) => {
           notification.error({
-            duration: 3000,
+            duration: 5000,
             content: 'Auth',
-            meta: error.response?.data?.message ?? 'Unknown error',
+            meta: error ?? 'Unknown error'
           })
         })
         .then(() => (formLoading.value = false))
