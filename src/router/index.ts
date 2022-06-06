@@ -70,7 +70,7 @@ router.beforeEach(async (to, from) => {
       // Do api request call to retreive user profile.
       // SetIsLoading to enable preloader
       userStore.setIsLoading(true);
-      const { data: user } = await api.get("users/me");
+      const { data: user } = await api.get(`users/me`);
       userStore.setUser(user);
       userStore.setIsLoading(false);
     } catch (err) {

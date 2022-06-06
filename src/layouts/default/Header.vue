@@ -8,7 +8,11 @@
     </n-breadcrumb>
     <n-space :size="20" align="center" style="line-height: 1">
       <n-dropdown placement="bottom-end" :options="options">
-        <n-avatar size="small" round src="/images/avatars/svg/1.svg" />
+        <n-avatar size="small" round 
+        :src="userStore.user?.avatar ? `http://localhost:1337${userStore.user.avatar.url}` : ' '" 
+        :fallback-src="defaultAvatar"
+        />
+        
       </n-dropdown>
       <n-button text circle type="error" @click.prevent="toggleDark()">
         <template #icon>
@@ -27,6 +31,7 @@ import { useUserStore } from "@/stores/user";
 import { useDark, useToggle } from "@vueuse/core";
 import { NAvatar, NText, NButton } from "naive-ui";
 import Icon from "@/components/Icon.vue";
+import { defaultAvatar } from '@/config/app.config.js'
 
 const userStore = useUserStore();
 const router = useRouter();
@@ -46,7 +51,8 @@ function renderCustomHeader() {
       h(NAvatar, {
         round: true,
         style: "margin-right: 12px;",
-        src: "/images/avatars/svg/1.svg",
+        src: userStore.user?.avatar ? `http://localhost:1337${userStore.user.avatar.url}` : ' ',
+        fallbackSrc: defaultAvatar
       }),
       h("div", null, [
         h("div", null, [

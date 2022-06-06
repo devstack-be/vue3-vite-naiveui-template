@@ -5,6 +5,8 @@
 <script lang="ts" setup>
 import { NIcon } from "naive-ui";
 import {
+  KeyOutline as password,
+  MailOutline as email,
   MoonOutline as moon,
   SunnyOutline as sunny,
   AddCircle as create,
@@ -34,6 +36,8 @@ import { Pencil as edit,
 Trash as destroy } from "@vicons/tabler";
 
 const icons = {
+  password,
+  email,
   destroy,
   edit,
   moon,

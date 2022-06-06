@@ -5,6 +5,7 @@ import { useRoute } from 'vue-router'
 import { useNotification, type UploadCustomRequestOptions } from 'naive-ui'
 import type { FormInst, FormRules, UploadFileInfo } from 'naive-ui'
 import qs from 'qs'
+import { defaultAvatar } from '@/config/app.config.js'
 
 interface ModelType {
   email: string | null
@@ -65,7 +66,7 @@ const handleValidateButtonClick = async (e: MouseEvent) => {
           notification.success({
             duration: 5000,
             content: 'Users',
-            meta: 'User successfully updated!'
+            meta: 'User successfully updated!',
           })
           user.value = response.data
         })
@@ -73,10 +74,9 @@ const handleValidateButtonClick = async (e: MouseEvent) => {
           notification.error({
             duration: 5000,
             content: 'Users',
-            meta: error ?? 'Unknown error'
+            meta: error ?? 'Unknown error',
           })
-        }
-        )
+        })
         .then(() => (formLoading.value = false))
     }
   })
@@ -86,9 +86,7 @@ watch(user, () => {
 })
 const fetchUser = async () => {
   const query = qs.stringify({
-    populate: [
-      'avatar'
-    ]
+    populate: ['avatar'],
   })
   api
     .get(`users/${route.params.id}?${query}`)
@@ -108,7 +106,7 @@ const previewFileList = ref<UploadFileInfo[]>([
     id: 'avatar',
     name: 'avatar.png',
     status: 'finished',
-    url: null
+    url: null,
   },
 ])
 const customRequest = ({
@@ -151,13 +149,12 @@ const customRequest = ({
 
 <template>
   <n-space v-if="user" vertical>
-  {{user}}
-  <n-avatar
-    round
-    :size="100"
-    :src="user.avatar ? `http://localhost:1337${user.avatar.url}` : ' '"
-    fallback-src="https://07akioni.oss-cn-beijing.aliyuncs.com/07akioni.jpeg"
-  />
+    <n-avatar
+      round
+      :size="100"
+      :src="user.avatar ? `http://localhost:1337${user.avatar.url}` : ' '"
+      :fallback-src="defaultAvatar"
+    />
     <n-form ref="formRef" :model="formValue" :rules="rules">
       <n-grid :x-gap="24">
         <n-form-item-gi :span="12" label="E-mail" path="email">

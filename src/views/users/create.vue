@@ -1,13 +1,12 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useNotification } from 'naive-ui'
-import type { FormInst, FormRules, FormItemRule, FormItemInst } from 'naive-ui'
+import type { FormInst, FormRules, FormItemInst } from 'naive-ui'
 import { useApi } from '@/composables/useApi'
 import { useRouter } from 'vue-router'
 
 interface ModelType {
   password: string | null
-  confirm_password: string | null
   email: string | null
   username: string | null
   firstname: string | null
@@ -15,30 +14,13 @@ interface ModelType {
   confirmed: boolean
 }
 
-function validatePasswordStartWith(rule: FormItemRule, value: string): boolean {
-  return (
-    !!formValue.value.password &&
-    formValue.value.password.startsWith(value) &&
-    formValue.value.password.length >= value.length
-  )
-}
-function validatePasswordSame(rule: FormItemRule, value: string): boolean {
-  return value === formValue.value.password
-}
-function handlePasswordInput() {
-  if (formValue.value.confirm_password) {
-    rPasswordFormItemRef.value?.validate({ trigger: 'password-input' })
-  }
-}
 const api = useApi()
 const router = useRouter()
 const notification = useNotification()
-const rPasswordFormItemRef = ref<FormItemInst | null>(null)
 const formRef = ref<FormInst | null>(null)
 const formLoading = ref(false)
 const formValue = ref<ModelType>({
   password: null,
-  confirm_password: null,
   email: null,
   username: null,
   firstname: null,
@@ -47,7 +29,7 @@ const formValue = ref<ModelType>({
 })
 const rules: FormRules = {
   email: {
-    required: true,
+    required: false,
     type: 'email',
     trigger: ['input'],
   },
@@ -59,28 +41,12 @@ const rules: FormRules = {
     required: true,
     trigger: ['input'],
   },
-  confirm_password: [
-    {
-      required: true,
-      message: 'Re-entered password is required',
-      trigger: ['input'],
-    },
-    {
-      validator: validatePasswordStartWith,
-      message: 'Password is not same as re-entered password!',
-      trigger: 'input',
-    },
-    {
-      validator: validatePasswordSame,
-      message: 'Password is not same as re-entered password!',
-      trigger: ['input', 'password-input'],
-    },
-  ],
   firstname: {
     required: false,
     trigger: ['input'],
   },
   lastname: {
+    required: false,
     trigger: ['input'],
   },
   confirmed: {
@@ -95,16 +61,22 @@ const handleValidateButtonClick = async (e: MouseEvent) => {
       formLoading.value = false
     } else {
       api
-        .post('http://localhost:5000/users', formValue.value)
+        .post('users', formValue.value)
         .then((response) => {
           notification.success({
             duration: 5000,
             content: 'Users',
-            meta: response.data.message,
+            meta: 'User created successfully!'
           })
           router.push({ name: 'users' })
         })
-        .catch((error) => console.log(error))
+        .catch((error) => {
+                    notification.error({
+            duration: 5000,
+            content: 'Users',
+            meta: error ?? 'Unknown error',
+          })
+        })
         .then(() => (formLoading.value = false))
     }
   })
@@ -120,7 +92,11 @@ const handleValidateButtonClick = async (e: MouseEvent) => {
             v-model:value="formValue.email"
             placeholder=""
             :input-props="{ type: 'email', autocomplete: 'off' }"
-          />
+          >
+               <template #prefix>
+        <Icon type="email" />
+      </template>
+          </n-input>
         </n-form-item-gi>
         <n-form-item-gi :span="12" label="Username" path="username">
           <n-input
@@ -134,24 +110,12 @@ const handleValidateButtonClick = async (e: MouseEvent) => {
             v-model:value="formValue.password"
             placeholder=""
             type="password"
-            @input="handlePasswordInput"
             @keydown.enter.prevent
-          />
-        </n-form-item-gi>
-        <n-form-item-gi
-          ref="rPasswordFormItemRef"
-          :span="12"
-          first
-          path="confirm_password"
-          label="Re-enter Password"
-        >
-          <n-input
-            v-model:value="formValue.confirm_password"
-            placeholder=""
-            :disabled="!formValue.password"
-            type="password"
-            @keydown.enter.prevent
-          />
+          >
+                         <template #prefix>
+        <Icon type="password" />
+      </template>
+          </n-input>
         </n-form-item-gi>
         <n-form-item-gi :span="12" label="Firstname" path="firstname">
           <n-input v-model:value="formValue.firstname" placeholder="" />

@@ -45,7 +45,7 @@ const columns:DataTableColumns<RowData> = [
     sorter: 'default',
   },
   {
-    title: 'Active',
+    title: 'Confirmed',
     key: 'confirmed',
     render(row) {
       return h(
@@ -56,7 +56,7 @@ const columns:DataTableColumns<RowData> = [
     },
   },
   {
-    title: 'Action',
+    title: 'Actions',
     key: 'actions',
     render(row) {
       return [
