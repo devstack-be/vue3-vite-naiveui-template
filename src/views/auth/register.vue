@@ -20,7 +20,7 @@ function validatePasswordStartWith(rule: FormItemRule, value: string): boolean {
   )
 }
 function validatePasswordSame(rule: FormItemRule, value: string): boolean {
-  return value != formValue.value.password
+  return value === formValue.value.password
 }
 function handlePasswordInput() {
   if (formValue.value.confirm_password) {
@@ -41,12 +41,12 @@ const formValue = ref<ModelType>({
 })
 const rules: FormRules = {
   email: {
-    required: false,
+    required: true,
     type: 'email',
     trigger: ['input'],
   },
   password: {
-    required: false,
+    required: true,
     trigger: ['input'],
   },
   username: {
@@ -59,6 +59,16 @@ const rules: FormRules = {
       message: 'Re-entered password is required',
       trigger: ['input'],
     },
+            {
+          validator: validatePasswordStartWith,
+          message: 'Password is not same as re-entered password!',
+          trigger: 'input'
+        },
+        {
+          validator: validatePasswordSame,
+          message: 'Password is not same as re-entered password!',
+          trigger: ['input', 'password-input']
+        }
   ],
 }
 const handleValidateButtonClick = async (e: MouseEvent) => {
@@ -69,12 +79,12 @@ const handleValidateButtonClick = async (e: MouseEvent) => {
       formLoading.value = false
     } else {
       api
-        .post('http://localhost:5000/auth/register', formValue.value)
+        .post('auth/local/register', formValue.value)
         .then((response) => {
           notification.success({
             duration: 5000,
             content: 'Auth',
-            meta: response.data.message,
+            meta: 'Account created successfully!',
           })
           router.push({ name: 'login' })
         })
@@ -82,7 +92,7 @@ const handleValidateButtonClick = async (e: MouseEvent) => {
           notification.error({
             duration: 5000,
             content: 'Auth',
-            meta: error
+            meta: error ?? 'Unknown error'
           })
         })
         .then(() => (formLoading.value = false))
@@ -157,6 +167,7 @@ const handleValidateButtonClick = async (e: MouseEvent) => {
     </n-space>
     <n-space justify="center">
       <n-button
+        class="margin-top-one"
         text
         tag="a"
         @click.prevent="router.push({ name: 'login' })"

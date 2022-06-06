@@ -10,6 +10,7 @@ import "vfonts/Lato.css";
 import "nprogress/nprogress.css";
 
 import "mosha-vue-toastify/dist/style.css";
+import "@/css/helpers.css"
 import moshaToast from "mosha-vue-toastify";
 
 import { createApi } from "@/composables/useApi";

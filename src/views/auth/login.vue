@@ -24,6 +24,7 @@ const formValue = ref<ModelType>({
 const rules: FormRules = {
   identifier: {
     required: true,
+    message: 'email is required',
     type: 'email',
     trigger: ['input'],
   },
@@ -106,6 +107,7 @@ const handleValidateButtonClick = async (e: MouseEvent) => {
     </n-space>
     <n-space justify="center">
       <n-button
+    class="margin-top-one"
     text
     tag="a"
     @click.prevent="router.push({name: 'register'})"
