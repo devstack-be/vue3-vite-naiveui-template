@@ -25,11 +25,11 @@ const rules: FormRules = {
   email: {
     required: true,
     type: 'email',
-    trigger: ['input'],
+    trigger: ['blur'],
   },
   password: {
     required: true,
-    trigger: ['input'],
+    trigger: ['blur'],
   },
 }
 const handleValidateButtonClick = async (e: MouseEvent) => {
@@ -38,7 +38,7 @@ const handleValidateButtonClick = async (e: MouseEvent) => {
   formRef.value?.validate((errors: Array<FormValidationError> | undefined) => {
     if (!errors) {
       api
-        .post('auth/login', formValue.value)
+        .post('api/users/login', {user: formValue.value})
         .then((response) => {
           userStore.setLoggedIn(response.data)
           notification.success({

@@ -95,7 +95,7 @@ const options = computed(() => [
               },
               block: true,
               type: "info",
-              circle: true,
+              circle: false,
             },
             {
               default: () => "Sign out",
