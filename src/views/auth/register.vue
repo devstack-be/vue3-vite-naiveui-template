@@ -69,12 +69,12 @@ const handleValidateButtonClick = async (e: MouseEvent) => {
       formLoading.value = false
     } else {
       api
-        .post('api/users', {user: formValue.value})
+        .post('api/auth/register', {user: formValue.value})
         .then((response) => {
           notification.success({
             duration: 5000,
             content: 'Auth',
-            meta: response.data.message,
+            meta: 'Account created successfully!',
           })
           router.push({ name: 'login' })
         })

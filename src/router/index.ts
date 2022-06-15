@@ -70,8 +70,8 @@ router.beforeEach(async (to, from) => {
       // Do api request call to retreive user profile.
       // SetIsLoading to enable preloader
       userStore.setIsLoading(true);
-      const { data: user } = await api.get("api/user");
-      userStore.setUser(user.user);
+      const { data: user } = await api.get("api/auth/me");
+      userStore.setUser(user);
       userStore.setIsLoading(false);
     } catch (err) {
       // If fail, disconnect user

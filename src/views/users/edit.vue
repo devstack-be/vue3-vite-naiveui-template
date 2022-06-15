@@ -58,7 +58,7 @@ const handleValidateButtonClick = async (e: MouseEvent) => {
       formLoading.value = false
     } else {
       api
-        .patch(`http://localhost:5000/users/${route.params.id}`, formValue.value)
+        .patch(`api/users/${route.params.id}`, formValue.value)
         .then((response) => {
           notification.success({
             duration: 5000,
@@ -82,9 +82,9 @@ watch(user, () => {
 })
 const fetchUser = async () => {
   api
-    .get(`http://localhost:5000/users/${route.params.id}`)
+    .get(`api/users/${route.params.id}`)
     .then((response) => {
-      user.value = response.data
+      user.value = response.data.user
       previewFileList.value[0].url = `http://localhost:5000/avatars/${user.value.avatar}`
     })
     .catch((error) => {

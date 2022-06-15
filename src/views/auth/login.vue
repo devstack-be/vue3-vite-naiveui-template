@@ -38,7 +38,7 @@ const handleValidateButtonClick = async (e: MouseEvent) => {
   formRef.value?.validate((errors: Array<FormValidationError> | undefined) => {
     if (!errors) {
       api
-        .post('api/users/login', {user: formValue.value})
+        .post('api/auth/login', {user: formValue.value})
         .then((response) => {
           userStore.setLoggedIn(response.data)
           notification.success({
@@ -53,7 +53,7 @@ const handleValidateButtonClick = async (e: MouseEvent) => {
           notification.error({
             duration: 3000,
             content: 'Auth',
-            meta: error.response?.data?.message ?? 'Unknown error',
+            meta: error ?? 'Unknown error',
           })
         })
         .then(() => (formLoading.value = false))

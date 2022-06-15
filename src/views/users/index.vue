@@ -98,7 +98,7 @@ const searchTrigger = async () => {
   )
 }
 onMounted(() => {
-  api.get('http://localhost:5000/users').then((response) => {
+  api.get('api/users').then((response) => {
     data.value = response.data
     filteredData.value = response.data
   })
