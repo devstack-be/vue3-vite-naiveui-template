@@ -17,11 +17,11 @@ const api = useApi()
 const router = useRouter()
 const notification = useNotification()
 const deleteUser = async (id: number) => {
-  api.delete(`http://localhost:5000/users/${id}`).then((response) => {
+  api.delete(`api/users/${id}`).then((response) => {
     notification.success({
       duration: 5000,
       content: 'Users',
-      meta: response.data.message,
+      meta: 'User deleted successfully',
     })
     data.value.splice(
       data.value.findIndex((e) => e.id === id),
