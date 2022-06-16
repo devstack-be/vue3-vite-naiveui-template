@@ -38,7 +38,7 @@ const handleValidateButtonClick = async (e: MouseEvent) => {
   formRef.value?.validate((errors: Array<FormValidationError> | undefined) => {
     if (!errors) {
       api
-        .post('api/auth/login', {user: formValue.value})
+        .post('api/auth/login', formValue.value)
         .then((response) => {
           userStore.setLoggedIn(response.data)
           notification.success({

@@ -16,7 +16,7 @@ export const useUserStore = defineStore("userStore", () => {
     sidebarCollapsed.value = !sidebarCollapsed.value
   };
   const setLoggedIn = async (data: any) => {
-    token.value = data.user.token;
+    token.value = data.access_token;
     user.value = data.user
   }
   const setUser = async (userData: any) => {
