@@ -41,9 +41,7 @@ const formValue = ref<ModelType>({
   username: null,
   is_active: false,
 })
-const formErrors = ref({
-  username: null
-})
+const formErrors = ref({})
 const rules: FormRules = {
   email: {
     required: true,
@@ -96,7 +94,14 @@ const handleValidateButtonClick = async (e: MouseEvent) => {
           })
           router.push({ name: 'users' })
         })
-        .catch((error) => console.log(error))
+        .catch((error) => {
+          formErrors.value = error.response.data.errors
+          notification.error({
+              duration: 5000,
+              content: 'Users',
+              meta: error.response.data.message,
+            })
+          })
         .then(() => (formLoading.value = false))
     }
   })
@@ -105,6 +110,14 @@ const handleValidateButtonClick = async (e: MouseEvent) => {
 
 <template>
   <n-space vertical>
+    <n-alert v-if="Object.keys(formErrors).length != 0" title="Error while validating" type="error">
+      <ul v-for="(errors, t) in formErrors">
+        <li class="li-form-error bold">{{t}}</li>
+        <ul v-for="error in errors">
+          <li class="li-form-error">{{error}}</li>
+        </ul>
+      </ul>
+    </n-alert>
     <n-form ref="formRef" :model="formValue" :rules="rules">
       <n-grid :x-gap="24">
         <n-form-item-gi :span="12" label="E-mail" path="email">
@@ -114,16 +127,13 @@ const handleValidateButtonClick = async (e: MouseEvent) => {
             :input-props="{ type: 'email', autocomplete: 'off' }"
           />
         </n-form-item-gi>
-        <n-form-item-gi :span="12" label="Username" path="username"  :validation-status="formErrors.username ?? null">
+        <n-form-item-gi :span="12" label="Username" path="username">
           <n-input
             v-model:value="formValue.username"
             placeholder=""
             :input-props="{ autocomplete: 'none' }"
            
           />
-      <template #feedback>
-        {{formErrors.username}}
-      </template>
         </n-form-item-gi>
         <n-form-item-gi :span="12" path="password" label="Password">
           <n-input
@@ -173,3 +183,9 @@ const handleValidateButtonClick = async (e: MouseEvent) => {
     </n-form>
   </n-space>
 </template>
+
+<style lang="scss">
+.li-form-error::first-letter, .n-form-item-feedback__line::first-letter {
+    text-transform:capitalize;
+}
+</style>

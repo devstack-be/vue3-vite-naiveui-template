@@ -37,8 +37,8 @@ export function createApi() {
           return Promise.reject(Array.isArray(error.response.data.message) ? error.response.data.message[0] : error.response.data.message)
       }
       if ([400].includes(error.response?.status)) {
-        if(error.response?.data?.message)
-          return Promise.reject(Array.isArray(error.response.data.message) ? error.response.data.message[0] : error.response.data.message)
+   /*      if(error.response?.data?.message)
+          return Promise.reject(Array.isArray(error.response.data.message) ? error.response.data.message[0] : error.response.data.message) */
       }
       return Promise.reject(error)
     }
