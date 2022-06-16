@@ -87,7 +87,7 @@ const handleValidateButtonClick = async (e: MouseEvent) => {
       formLoading.value = false
     } else {
       api
-        .post('http://localhost:5000/users', formValue.value)
+        .post('api/users', formValue.value)
         .then((response) => {
           notification.success({
             duration: 5000,
