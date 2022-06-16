@@ -10,8 +10,6 @@ interface ModelType {
   confirm_password: string | null
   email: string | null
   username: string | null
-  firstname: string | null
-  lastname: string | null
   is_active: boolean
 }
 
@@ -41,9 +39,10 @@ const formValue = ref<ModelType>({
   confirm_password: null,
   email: null,
   username: null,
-  firstname: null,
-  lastname: null,
   is_active: false,
+})
+const formErrors = ref({
+  username: null
 })
 const rules: FormRules = {
   email: {
@@ -76,13 +75,6 @@ const rules: FormRules = {
       trigger: ['input', 'password-input'],
     },
   ],
-  firstname: {
-    required: false,
-    trigger: ['input'],
-  },
-  lastname: {
-    trigger: ['input'],
-  },
   is_active: {
     required: true,
   },
@@ -122,12 +114,16 @@ const handleValidateButtonClick = async (e: MouseEvent) => {
             :input-props="{ type: 'email', autocomplete: 'off' }"
           />
         </n-form-item-gi>
-        <n-form-item-gi :span="12" label="Username" path="username">
+        <n-form-item-gi :span="12" label="Username" path="username"  :validation-status="formErrors.username ?? null">
           <n-input
             v-model:value="formValue.username"
             placeholder=""
             :input-props="{ autocomplete: 'none' }"
+           
           />
+      <template #feedback>
+        {{formErrors.username}}
+      </template>
         </n-form-item-gi>
         <n-form-item-gi :span="12" path="password" label="Password">
           <n-input
@@ -152,12 +148,6 @@ const handleValidateButtonClick = async (e: MouseEvent) => {
             type="password"
             @keydown.enter.prevent
           />
-        </n-form-item-gi>
-        <n-form-item-gi :span="12" label="Firstname" path="firstname">
-          <n-input v-model:value="formValue.firstname" placeholder="" />
-        </n-form-item-gi>
-        <n-form-item-gi :span="12" label="Lastname" path="lastname">
-          <n-input v-model:value="formValue.lastname" placeholder="" />
         </n-form-item-gi>
         <n-form-item-gi :span="12" label="Activated" path="is_active">
           <n-checkbox v-model:checked="formValue.is_active"> Activated </n-checkbox>

@@ -99,8 +99,8 @@ const searchTrigger = async () => {
 }
 onMounted(() => {
   api.get('api/users').then((response) => {
-    data.value = response.data
-    filteredData.value = response.data
+    data.value = response.data.users
+    filteredData.value = response.data.users
   })
 })
 </script>

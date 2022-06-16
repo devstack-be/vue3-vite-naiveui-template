@@ -84,7 +84,7 @@ const fetchUser = async () => {
   api
     .get(`api/users/${route.params.id}`)
     .then((response) => {
-      user.value = response.data.user
+      user.value = response.data
       previewFileList.value[0].url = `http://localhost:5000/avatars/${user.value.avatar}`
     })
     .catch((error) => {
