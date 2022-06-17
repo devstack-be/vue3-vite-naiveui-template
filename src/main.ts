@@ -7,8 +7,8 @@ import router from "./router";
 import naive from "naive-ui";
 import "vfonts/Lato.css";
 
-import "@/css/helpers.css";
-
+//import "@/css/helpers.css";
+import "@/css/main.css";
 import "nprogress/nprogress.css";
 
 import "mosha-vue-toastify/dist/style.css";

@@ -90,9 +90,11 @@ const handleValidateButtonClick = async (e: MouseEvent) => {
           notification.success({
             duration: 5000,
             content: 'Users',
-            meta: response.data.message,
+            meta: 'User created successfully',
           })
-          router.push({ name: 'users' })
+          router.push({ name: 'users.edit', params: {
+            id: response.data
+          }})
         })
         .catch((error) => {
           formErrors.value = error.response.data.errors
@@ -100,7 +102,7 @@ const handleValidateButtonClick = async (e: MouseEvent) => {
               duration: 5000,
               content: 'Users',
               meta: error.response.data.message,
-            })
+          })
           })
         .then(() => (formLoading.value = false))
     }
@@ -110,14 +112,7 @@ const handleValidateButtonClick = async (e: MouseEvent) => {
 
 <template>
   <n-space vertical>
-    <n-alert v-if="Object.keys(formErrors).length != 0" title="Error while validating" type="error">
-      <ul v-for="(errors, t) in formErrors">
-        <li class="li-form-error bold">{{t}}</li>
-        <ul v-for="error in errors">
-          <li class="li-form-error">{{error}}</li>
-        </ul>
-      </ul>
-    </n-alert>
+    <AlertErrors :errors="formErrors"/>
     <n-form ref="formRef" :model="formValue" :rules="rules">
       <n-grid :x-gap="24">
         <n-form-item-gi :span="12" label="E-mail" path="email">
@@ -183,9 +178,3 @@ const handleValidateButtonClick = async (e: MouseEvent) => {
     </n-form>
   </n-space>
 </template>
-
-<style lang="scss">
-.li-form-error::first-letter, .n-form-item-feedback__line::first-letter {
-    text-transform:capitalize;
-}
-</style>

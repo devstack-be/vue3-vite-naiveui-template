@@ -1,0 +1,3 @@
+.li-form-error::first-letter, .n-form-item-feedback__line::first-letter {
+    text-transform:capitalize;
+}

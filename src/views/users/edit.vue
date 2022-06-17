@@ -2,14 +2,15 @@
 import { useApi } from '@/composables/useApi'
 import { onMounted, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
-import { useNotification, type UploadCustomRequestOptions } from 'naive-ui'
-import type { FormInst, FormRules, UploadFileInfo } from 'naive-ui'
+import { useNotification } from 'naive-ui'
+import type { FormInst, FormRules } from 'naive-ui'
 interface ModelType {
   email: string | null
   username: string | null
   firstname: string | null
   lastname: string | null
   is_active: boolean
+  bio: string
 }
 
 const api = useApi()
@@ -26,9 +27,11 @@ const getFormValues = (): ModelType => {
     firstname: user.value ? user.value.firstname : null,
     lastname: user.value ? user.value.lastname : null,
     is_active: user.value ? user.value.is_active : null,
+    bio: user.value ? user.value.bio : null
   }
 }
 const formValue = ref<ModelType>(getFormValues())
+const formErrors = ref({})
 const rules: FormRules = {
   email: {
     required: true,
@@ -37,13 +40,6 @@ const rules: FormRules = {
   },
   username: {
     required: true,
-    trigger: ['input'],
-  },
-  firstname: {
-    required: false,
-    trigger: ['input'],
-  },
-  lastname: {
     trigger: ['input'],
   },
   is_active: {
@@ -63,16 +59,17 @@ const handleValidateButtonClick = async (e: MouseEvent) => {
           notification.success({
             duration: 5000,
             content: 'Users',
-            meta: response.data.message,
+            meta: 'User updated successfully',
           })
         })
-        .catch((error) =>
-          notification.error({
+        .catch((error) => {
+          formErrors.value = error.response.data.errors
+            notification.error({
             duration: 5000,
             content: 'Users',
-            meta: 'Errors while updating',
+            meta: error.response.data.message,
           })
-        )
+        })
         .then(() => (formLoading.value = false))
     }
   })
@@ -85,7 +82,6 @@ const fetchUser = async () => {
     .get(`api/users/${route.params.id}`)
     .then((response) => {
       user.value = response.data
-      previewFileList.value[0].url = `http://localhost:5000/avatars/${user.value.avatar}`
     })
     .catch((error) => {
       console.log(error)
@@ -94,63 +90,11 @@ const fetchUser = async () => {
 onMounted(() => {
   fetchUser()
 })
-const previewFileList = ref<UploadFileInfo[]>([
-  {
-    id: 'avatar',
-    name: 'avatar.png',
-    status: 'finished',
-    url: null
-  },
-])
-const customRequest = ({
-  file,
-  data,
-  headers,
-  withCredentials,
-  action,
-  onFinish,
-  onError,
-  onProgress,
-}: UploadCustomRequestOptions) => {
-  const formDataZ = new FormData()
-  formDataZ.append('avatar', file.file as File)
-  api
-    .post(action as string, formDataZ, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
-    })
-    .then((response) => {
-      notification.success({
-        duration: 5000,
-        content: 'Avatar',
-        meta: response.data.message,
-      })
-      onFinish()
-    })
-    .catch((error) => {
-      console.log(error)
-      notification.error({
-        duration: 5000,
-        content: 'Avatar',
-        meta: error.response.data.message,
-      })
-      onError()
-    })
-}
 </script>
 
 <template>
   <n-space v-if="user" vertical>
-    <n-upload
-      :max="1"
-      name="avatar"
-      :custom-request="customRequest"
-      :action="`http://localhost:5000/users/avatar/${route.params.id}`"
-      with-credentials
-      :default-file-list="previewFileList"
-      list-type="image-card"
-    />
+    <AlertErrors :errors="formErrors"/>
     <n-form ref="formRef" :model="formValue" :rules="rules">
       <n-grid :x-gap="24">
         <n-form-item-gi :span="12" label="E-mail" path="email">
@@ -175,6 +119,9 @@ const customRequest = ({
         </n-form-item-gi>
         <n-form-item-gi :span="12" label="Activated" path="is_active">
           <n-checkbox v-model:checked="formValue.is_active"> Activated </n-checkbox>
+        </n-form-item-gi>
+        <n-form-item-gi :span="12" label="Biography" path="bio">
+          <n-input clearable type="textarea" v-model:value="formValue.bio" placeholder="" />
         </n-form-item-gi>
       </n-grid>
       <n-row :gutter="[0, 24]">
