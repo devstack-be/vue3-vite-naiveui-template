@@ -1,3 +1,9 @@
+@import url('https://fonts.googleapis.com/css?family=Proxima+Nova');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 .li-form-error::first-letter, .n-form-item-feedback__line::first-letter {
     text-transform:capitalize;
 }

@@ -24,7 +24,7 @@
               </div>
             </TransitionChild>
             <div class="flex-shrink-0 flex items-center px-4">
-              <img class="h-8 w-auto" src="@/assets/logo.png" alt="Devstack" />
+              <img class="h-8 w-auto" src="https://tailwindui.com/img/logos/easywire-logo-cyan-300-mark-white-text.svg" alt="Easywire logo" />
             </div>
             <nav class="mt-5 flex-shrink-0 h-full divide-y divide-cyan-800 overflow-y-auto" aria-label="Sidebar">
               <div class="px-2 space-y-1">
@@ -55,7 +55,7 @@
       <!-- Sidebar component, swap this element with another sidebar if you like -->
       <div class="flex flex-col flex-grow bg-cyan-700 pt-5 pb-4 overflow-y-auto">
         <div class="flex items-center flex-shrink-0 px-4">
-          <img class="h-8 w-auto" src="@/assets/logo.png" alt="Devstack" />
+          <img class="h-8 w-auto" src="https://tailwindui.com/img/logos/easywire-logo-cyan-300-mark-white-text.svg" alt="Easywire logo" />
         </div>
         <nav class="mt-5 flex-1 flex flex-col divide-y divide-cyan-800 overflow-y-auto" aria-label="Sidebar">
           <div class="px-2 space-y-1">
@@ -91,7 +91,7 @@
                 <div class="absolute inset-y-0 left-0 flex items-center pointer-events-none" aria-hidden="true">
                   <SearchIcon class="h-5 w-5" aria-hidden="true" />
                 </div>
-                <input id="search-field" name="search-field" class="block w-full h-full pl-8 pr-3 py-2 border-transparent text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-0 focus:border-transparent text-sm" placeholder="Search transactions" type="search" />
+                <input id="search-field" name="search-field" class="block w-full h-full pl-8 pr-3 py-2 border-transparent text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-0 focus:border-transparent sm:text-sm" placeholder="Search transactions" type="search" />
               </div>
             </form>
           </div>
