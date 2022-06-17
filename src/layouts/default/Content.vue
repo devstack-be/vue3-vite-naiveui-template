@@ -1,5 +1,5 @@
 <template>
-  <n-layout-content content-style="padding: 24px; min-height: 85vh">
+  <main class="flex-1 pb-8">
     <router-view />
-  </n-layout-content>
+  </main>
 </template>

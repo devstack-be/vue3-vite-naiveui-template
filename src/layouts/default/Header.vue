@@ -1,129 +1,56 @@
-<template>
-  <n-layout-header bordered>
-    <n-button class="reload" text @click="router.go(0)">
-      <Icon type="refresh" size="20" :depth="2" />
-    </n-button>
-    <n-breadcrumb>
-      <n-breadcrumb-item>Dashboard</n-breadcrumb-item>
-    </n-breadcrumb>
-    <n-space :size="20" align="center" style="line-height: 1">
-      <n-dropdown placement="bottom-end" :options="options">
-        <n-avatar size="small" round src="/images/avatars/svg/1.svg" />
-      </n-dropdown>
-      <n-button text circle type="error" @click.prevent="toggleDark()">
-        <template #icon>
-          <Icon v-if="isDark" type="sunny" />
-          <Icon v-else type="moon" />
-        </template>
-      </n-button>
-    </n-space>
-  </n-layout-header>
-</template>
-
 <script lang="ts" setup>
-import { h, computed } from "vue";
-import { useRouter, RouterLink } from "vue-router";
-import { useUserStore } from "@/stores/user";
-import { useDark, useToggle } from "@vueuse/core";
-import { NAvatar, NText, NButton } from "naive-ui";
-import Icon from "@/components/Icon.vue";
 
-const userStore = useUserStore();
-const router = useRouter();
-const isDark = useDark({
-  onChanged(dark: boolean) {
-    userStore.setIsDark(dark);
-  },
-});
-const toggleDark = useToggle(isDark);
-function renderCustomHeader() {
-  return h(
-    "div",
-    {
-      style: "display: flex; align-items: center; padding: 8px 12px;",
-    },
-    [
-      h(NAvatar, {
-        round: true,
-        style: "margin-right: 12px;",
-        src: "/images/avatars/svg/1.svg",
-      }),
-      h("div", null, [
-        h("div", null, [
-          h(NText, { depth: 2 }, { default: () => userStore.user?.username }),
-        ]),
-        h("div", { style: "font-size: 12px;" }, [
-          h(NText, { depth: 3 }, { default: () => `${userStore.user?.email}` }),
-        ]),
-      ]),
-    ]
-  )
-}
-const options = computed(() => [
-  {
-    key: "header",
-    type: "render",
-    render: renderCustomHeader,
-  },
-  {
-    key: "header-divider",
-    type: "divider",
-  },
-  {
-    key: "settings",
-    label: () => h(RouterLink, { to: "/" }, { default: () => "Settings" }),
-    icon() {
-      return h(Icon, { type: "settings" });
-    },
-  },
-  { key: "divider", type: "divider" },
-  {
-    key: "logout",
-    type: "render",
-    render() {
-      return h(
-        "div",
-        {
-          style: "display: flex; align-items: center; padding: 8px 8px;",
-        },
-        [
-          h(
-            NButton,
-            {
-              onClick() {
-                userStore.logoutUser()
-              },
-              block: true,
-              type: "info",
-              circle: false,
-            },
-            {
-              default: () => "Sign out",
-              icon: () => h(Icon, { type: "logout" }),
-            }
-          ),
-        ]
-      )
-    },
-  },
-]);
 </script>
 
-<style scoped lang="scss">
-.n-layout-header {
-  position: sticky;
-  top: 0;
-  z-index: 1;
-  display: flex;
-  align-items: center;
-  padding: 9px 18px;
-}
+<template>
+        <div class="relative z-10 flex-shrink-0 flex h-16 bg-white border-b border-gray-200 lg:border-none">
+        <button type="button" class="px-4 border-r border-gray-200 text-gray-400 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-cyan-500 lg:hidden" @click="sidebarOpen = true">
+          <span class="sr-only">Open sidebar</span>
+          <MenuAlt1Icon class="h-6 w-6" aria-hidden="true" />
+        </button>
+        <!-- Search bar -->
+        <div class="flex-1 px-4 flex justify-between sm:px-6 lg:max-w-6xl lg:mx-auto lg:px-8">
+          <div class="flex-1 flex">
+            <form class="w-full flex md:ml-0" action="#" method="GET">
+              <label for="search-field" class="sr-only">Search</label>
+              <div class="relative w-full text-gray-400 focus-within:text-gray-600">
+                <div class="absolute inset-y-0 left-0 flex items-center pointer-events-none" aria-hidden="true">
+                  <SearchIcon class="h-5 w-5" aria-hidden="true" />
+                </div>
+                <input id="search-field" name="search-field" class="block w-full h-full pl-8 pr-3 py-2 border-transparent text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-0 focus:border-transparent sm:text-sm" placeholder="Search transactions" type="search" />
+              </div>
+            </form>
+          </div>
+          <div class="ml-4 flex items-center md:ml-6">
+            <button type="button" class="bg-white p-1 rounded-full text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cyan-500">
+              <span class="sr-only">View notifications</span>
+              <BellIcon class="h-6 w-6" aria-hidden="true" />
+            </button>
 
-.n-button {
-  margin-right: 15px;
-}
-
-.n-space {
-  margin-left: auto;
-}
-</style>
+            <!-- Profile dropdown -->
+            <Menu as="div" class="ml-3 relative">
+              <div>
+                <MenuButton class="max-w-xs bg-white rounded-full flex items-center text-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cyan-500 lg:p-2 lg:rounded-md lg:hover:bg-gray-50">
+                  <img class="h-8 w-8 rounded-full" src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="" />
+                  <span class="hidden ml-3 text-gray-700 text-sm font-medium lg:block"><span class="sr-only">Open user menu for </span>Emilia Birch</span>
+                  <ChevronDownIcon class="hidden flex-shrink-0 ml-1 h-5 w-5 text-gray-400 lg:block" aria-hidden="true" />
+                </MenuButton>
+              </div>
+              <transition enter-active-class="transition ease-out duration-100" enter-from-class="transform opacity-0 scale-95" enter-to-class="transform opacity-100 scale-100" leave-active-class="transition ease-in duration-75" leave-from-class="transform opacity-100 scale-100" leave-to-class="transform opacity-0 scale-95">
+                <MenuItems class="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none">
+                  <MenuItem v-slot="{ active }">
+                    <a href="#" :class="[active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700']">Your Profile</a>
+                  </MenuItem>
+                  <MenuItem v-slot="{ active }">
+                    <a href="#" :class="[active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700']">Settings</a>
+                  </MenuItem>
+                  <MenuItem v-slot="{ active }">
+                    <a href="#" :class="[active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700']">Logout</a>
+                  </MenuItem>
+                </MenuItems>
+              </transition>
+            </Menu>
+          </div>
+        </div>
+      </div>
+</template>

@@ -4,17 +4,18 @@ import Sidebar from "./Sidebar.vue";
 import Header from "./Header.vue";
 import Content from "./Content.vue";
 import Footer from "./Footer.vue";
+import Layout from "./Layout.vue";
 const userStore = useUserStore();
 </script>
 
 <template>
   <PreLoader v-if="userStore.isLoading" />
-  <n-layout v-else-if="userStore.user" position="absolute" has-sider>
+  <div v-else-if="userStore.user" class="min-h-full">
     <Sidebar />
-    <n-layout>
+    <Layout>
       <Header />
       <Content />
       <Footer />
-    </n-layout>
-  </n-layout>
+    </Layout>
+  </div>
 </template>

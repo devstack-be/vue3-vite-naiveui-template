@@ -12,7 +12,7 @@ module.exports = {
         '64': '14rem',
       },
       fontFamily: {
-        'sans': ['Proxima Nova', ...defaultTheme.fontFamily.sans],
+        'sans': ['Inter', 'Proxima Nova', ...defaultTheme.fontFamily.sans],
       },
       colors: {
         sky: colors.sky,
