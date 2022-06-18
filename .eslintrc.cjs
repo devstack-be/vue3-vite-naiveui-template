@@ -29,14 +29,6 @@ module.exports = {
       rules: {
         'no-console': process.env.NODE_ENV === 'production' ? 'error' : 'off',
         'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off',
-        'vue/script-setup-uses-vars': 'error',
-        'vue/multi-word-component-names': 'off',
-        'no-unused-vars': 'off',
-        '@typescript-eslint/no-unused-vars': ['error'],
-
-        'vuejs-accessibility/form-control-has-label': 'off',
-        'vuejs-accessibility/label-has-for': 'off',
-        'vuejs-accessibility/anchor-has-content': 'off',
       },
     },
   ],

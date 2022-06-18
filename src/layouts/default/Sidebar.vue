@@ -18,7 +18,7 @@ import {
   UserGroupIcon,
   XIcon,
 } from '@heroicons/vue/outline'
-
+import { useThemeStore } from '@/stores/theme';
 const navigation = [
   { name: 'Home', href: '#', icon: HomeIcon, current: true },
   { name: 'History', href: '#', icon: ClockIcon, current: false },
@@ -32,11 +32,11 @@ const secondaryNavigation = [
   { name: 'Help', href: '#', icon: QuestionMarkCircleIcon },
   { name: 'Privacy', href: '#', icon: ShieldCheckIcon },
 ]
-const sidebarOpen = ref(false)
+const themeStore = useThemeStore()
 </script>
 <template>
-    <TransitionRoot as="template" :show="sidebarOpen">
-      <Dialog as="div" class="fixed inset-0 flex z-40 lg:hidden" @close="sidebarOpen = false">
+    <TransitionRoot as="template" :show="themeStore.sidebarOpen">
+      <Dialog as="div" class="fixed inset-0 flex z-40 lg:hidden" @close="themeStore.setSidebarOpen(false)">
         <TransitionChild as="template" enter="transition-opacity ease-linear duration-300" enter-from="opacity-0" enter-to="opacity-100" leave="transition-opacity ease-linear duration-300" leave-from="opacity-100" leave-to="opacity-0">
           <DialogOverlay class="fixed inset-0 bg-gray-600 bg-opacity-75" />
         </TransitionChild>
@@ -44,7 +44,7 @@ const sidebarOpen = ref(false)
           <div class="relative flex-1 flex flex-col max-w-xs w-full pt-5 pb-4 bg-cyan-700">
             <TransitionChild as="template" enter="ease-in-out duration-300" enter-from="opacity-0" enter-to="opacity-100" leave="ease-in-out duration-300" leave-from="opacity-100" leave-to="opacity-0">
               <div class="absolute top-0 right-0 -mr-12 pt-2">
-                <button type="button" class="ml-1 flex items-center justify-center h-10 w-10 rounded-full focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white" @click="sidebarOpen = false">
+                <button type="button" class="ml-1 flex items-center justify-center h-10 w-10 rounded-full focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white" @click="themeStore.setSidebarOpen(false)">
                   <span class="sr-only">Close sidebar</span>
                   <XIcon class="h-6 w-6 text-white" aria-hidden="true" />
                 </button>

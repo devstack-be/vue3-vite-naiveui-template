@@ -6,7 +6,6 @@
     "paths": {
       "@/*": ["./src/*"]
     },
-    "types": ["naive-ui/volar"]
   },
 
   "references": [
