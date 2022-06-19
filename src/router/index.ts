@@ -1,7 +1,7 @@
 import { useApi } from "@/composables/useApi";
 import { useUserStore } from "@/stores/user";
 import { createRouter, createWebHistory, START_LOCATION } from "vue-router";
-import { createToast } from "mosha-vue-toastify";
+import { notify } from "notiwind";
 import * as NProgress from "nprogress";
 
 const routes = [
@@ -77,17 +77,12 @@ router.beforeEach(async (to, from) => {
       // If fail, disconnect user
       userStore.logoutUser()
       userStore.setIsLoading(false)
-      createToast(
-        {
-          title: "Auth",
-          description: "Your session is invalid!",
-        },
-        {
-          type: "danger",
-          showIcon: true,
-          hideProgressBar: true,
-        }
-      );
+      notify({
+        group: "classic",
+        type: 'error',
+        title: "Auth",
+        text: "Your session is invalid"
+      }) // 4s
       if (to.meta.requiresAuth) {
         // redirect the user somewhere
         return {
@@ -101,18 +96,12 @@ router.beforeEach(async (to, from) => {
   } else if (to.meta.requiresAuth && !userStore.isLoggedIn) {
     // 2. If the requires auth via requiresAuth meta, check if user is logged in
     // if not, redirect to login page.
-    createToast(
-      {
-        title: "Auth",
-        description: "Sorry, you should loggin to access this section",
-      },
-      {
-        type: "danger",
-        showIcon: true,
-        hideProgressBar: true,
-      }
-    );
-
+    notify({
+      group: "classic",
+      type: 'error',
+      title: "Auth",
+      text: "You must be logged in to access this page"
+    })
     return {
       // Will follow the redirection set in /@src/pages/auth/index.vue
       name: "login",
@@ -121,17 +110,12 @@ router.beforeEach(async (to, from) => {
     };
   }
   if (to.meta.requiresGuest && userStore.isLoggedIn) {
-    createToast(
-      {
-        title: "Auth",
-        description: "Sorry, you should be guest to access this section",
-      },
-      {
-        type: "danger",
-        showIcon: true,
-        hideProgressBar: true,
-      }
-    );
+    notify({
+      group: "classic",
+      type: 'error',
+      title: "Auth",
+      text: "You must be guest to access this page"
+    }) // 4s
     return {
       name: "home",
     };

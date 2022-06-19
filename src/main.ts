@@ -11,9 +11,6 @@ import "vfonts/Lato.css";
 import "@/css/main.css";
 import "nprogress/nprogress.css";
 
-import "mosha-vue-toastify/dist/style.css";
-import moshaToast from "mosha-vue-toastify";
-
 import { createApi } from "@/composables/useApi";
 import Notifications from 'notiwind'
 import Default from "@/layouts/default/default.vue";
@@ -22,7 +19,6 @@ import Auth from "@/layouts/auth.vue";
 const app = createApp(App);
 createApi();
 //app.use(naive);
-app.use(moshaToast);
 app.use(Notifications);
 app.use(createPinia());
 app.use(router);

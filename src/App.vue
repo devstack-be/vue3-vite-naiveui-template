@@ -21,10 +21,8 @@ watch(
 </script>
 
 <template>
-  <n-notification-provider>
-    <Notification/>
+    <Notifications/>
     <Component :is="layout">
       <RouterView />
     </Component>
-  </n-notification-provider>
 </template>

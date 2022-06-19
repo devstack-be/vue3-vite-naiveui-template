@@ -4,6 +4,6 @@
 @tailwind components;
 @tailwind utilities;
 
-.li-form-error::first-letter, .n-form-item-feedback__line::first-letter {
+.first-letter::first-letter {
     text-transform:capitalize;
 }

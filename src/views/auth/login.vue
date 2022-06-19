@@ -1,11 +1,10 @@
 <script setup lang="ts">
-import { onMounted, ref } from 'vue'
-import { useNotification } from 'naive-ui'
-import type { FormInst, FormRules, FormValidationError } from 'naive-ui'
+import { ref } from 'vue'
 import { LockClosedIcon, MailIcon, LoginIcon } from '@heroicons/vue/outline'
 import { useApi } from '@/composables/useApi'
 import { useUserStore } from '@/stores/user'
 import { useRouter } from 'vue-router'
+import {notify} from 'notiwind'
 import Form from '@/utilities/form'
 
 interface ModelType {
@@ -15,14 +14,8 @@ interface ModelType {
 
 const api = useApi()
 const router = useRouter()
-const notification = useNotification()
-const formRef = ref<FormInst | null>(null)
 const formLoading = ref(false)
 const userStore = useUserStore()
-/* const formValue = ref<ModelType>({
-  email: null,
-  password: null,
-}) */
 const formValue = new Form<ModelType>({
     email: null, 
     password: null,
@@ -36,53 +29,30 @@ const handleLoginClick = async (e: MouseEvent) => {
     .post('api/auth/login', formValue.value)
     .then((response: any) => {
       userStore.setLoggedIn(response)
-      notification.success({
-        closable: true,
-        duration: 5000,
-        content: 'Auth',
-        meta: `Welcome back, ${response.user.username}`,
-      })
+      notify({
+      group: "classic",
+      type: 'success',
+      title: "Auth",
+      text: `Welcome back, ${response.user.username}`,
+    })
       router.push('/')
     })
     .catch((error: any) => {
-          notification.error({
-            duration: 3000,
-            content: 'Auth',
-            meta: error ?? 'Unknown error',
-          })
+      notify({
+      group: "classic",
+      type: 'error',
+      title: "Auth",
+      text: error ?? 'Unknown error',
+    })
     })
     .then(() => (formLoading.value = false))
 }
-/* const handleLoginClick = async (e: MouseEvent) => {
-  e.preventDefault()
-  formLoading.value = true
-  api
-    .post('api/auth/login', formValue.value)
-    .then((response) => {
-      userStore.setLoggedIn(response.data)
-      notification.success({
-        closable: true,
-        duration: 5000,
-        content: 'Auth',
-        meta: `Welcome back, ${response.data.user.username}`,
-      })
-      router.push('/')
-    })
-    .catch((error) => {
-      notification.error({
-        duration: 3000,
-        content: 'Auth',
-        meta: error ?? 'Unknown error',
-      })
-    })
-    .then(() => (formLoading.value = false))
-} */
 </script>
 
 <template>
   <div class="min-h-full flex flex-col justify-center py-12 sm:px-6 lg:px-8">
     <div class="sm:mx-auto sm:w-full sm:max-w-md">
-      <img class="mx-auto h-12 w-auto" src="@/assets/logofull.png" alt="Devstack" />
+      <img class="mx-auto h-14 w-auto" src="@/assets/logo.png" alt="Devstack" />
       <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900">
         Sign in to your account
       </h2>
