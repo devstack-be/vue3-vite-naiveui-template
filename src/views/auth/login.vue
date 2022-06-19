@@ -5,7 +5,6 @@ import { useApi } from '@/composables/useApi'
 import { useUserStore } from '@/stores/user'
 import { useRouter } from 'vue-router'
 import {notify} from 'notiwind'
-import Form from '@/utilities/form'
 
 interface ModelType {
   email: string | null

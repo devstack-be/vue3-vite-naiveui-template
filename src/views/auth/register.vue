@@ -1,42 +1,59 @@
 <script setup lang="ts">
-import { ref } from 'vue'
-import type { FormInst, FormValidationError } from 'naive-ui'
+import { computed, reactive, ref } from 'vue'
 import { LockClosedIcon, MailIcon, SaveIcon } from '@heroicons/vue/outline'
 import { ExclamationCircleIcon } from '@heroicons/vue/solid'
 import { useApi } from '@/composables/useApi'
-import { useUserStore } from '@/stores/user'
 import { useRouter } from 'vue-router'
 import { notify } from 'notiwind'
-import Form from '@/utilities/form'
+
+import { useVuelidate } from '@vuelidate/core'
+import { email, required, sameAs, helpers } from '@vuelidate/validators'
+import messagesT from '@/utilities/form/validators'
 
 interface ModelType {
-  email: string | null
   password: string | null
+  confirm_password: string | null
+  email: string | null
+  username: string | null
 }
-
 const api = useApi()
 const router = useRouter()
-const formRef = ref<FormInst | null>(null)
 const formLoading = ref(false)
-const userStore = useUserStore()
-const formValue = new Form<ModelType>(
-  {
-    password: null,
-    confirm_password: null,
-    email: null,
-    username: null,
-  },
-  {
-    http: api,
-  }
-)
-
+const formValue = reactive<ModelType>({
+  password: null,
+  confirm_password: null,
+  email: null,
+  username: null,
+})
+const passwordRef = computed(() => formValue.password);
+const rules = {
+  username: { required: helpers.withMessage('Username is required', required) },
+  email: { required, email },
+  password: { required },
+  confirm_password: { required, sameAs: sameAs(passwordRef) },
+}
+const $externalResults = ref({}) // works with reactive({}) too.
+const v$ = useVuelidate(rules, formValue, {
+  $externalResults,
+  $lazy: true,
+  $autoDirty: true,
+})
 const handleRegisterClick = async (e: MouseEvent) => {
   e.preventDefault()
+  const isFormCorrect = await v$.value.$validate()
+  if (!isFormCorrect) {
+    notify({
+      group: 'classic',
+      type: 'error',
+      title: 'Auth',
+      text: 'Please fill the form correctly!',
+    })
+    return
+  }
   formLoading.value = true
-  formValue
-    .post('api/auth/register', formValue.value)
-    .then((response: any) => {
+  api
+    .post('api/auth/register', formValue)
+    .then((_response: any) => {
       notify({
         group: 'classic',
         type: 'success',
@@ -46,12 +63,14 @@ const handleRegisterClick = async (e: MouseEvent) => {
       router.push({ name: 'login' })
     })
     .catch((error: any) => {
-      console.log(error)
+      if (error.response && error.response.data.errors) {
+        $externalResults.value = error.response.data.errors
+      }
       notify({
         group: 'classic',
         type: 'error',
         title: 'Auth',
-        text: error ?? 'Unknown error',
+        text: 'Validation failed!',
       })
     })
     .then(() => (formLoading.value = false))
@@ -78,7 +97,6 @@ const handleRegisterClick = async (e: MouseEvent) => {
     </div>
 
     <div class="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
-      {{ formValue }}
       <div class="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
         <form class="space-y-6" action="#" method="POST">
           <div>
@@ -98,7 +116,20 @@ const handleRegisterClick = async (e: MouseEvent) => {
                 id="email"
                 class="focus:ring-indigo-500 focus:border-indigo-500 block w-full pl-10 sm:text-sm border-gray-300 rounded-md"
               />
+              <div
+                v-if="v$.email.$error"
+                class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none"
+              >
+                <ExclamationCircleIcon class="h-5 w-5 text-red-500" aria-hidden="true" />
+              </div>
             </div>
+            <p
+              v-if="v$.email.$error"
+              class="mt-2 text-sm text-red-600"
+              id="email-error"
+            >
+              {{ messagesT.email[v$.email.$errors[0].$validator]?.message }}
+            </p>
           </div>
           <div>
             <label for="password" class="block text-sm font-medium text-gray-700">
@@ -117,7 +148,20 @@ const handleRegisterClick = async (e: MouseEvent) => {
                 id="password"
                 class="focus:ring-indigo-500 focus:border-indigo-500 block w-full pl-10 sm:text-sm border-gray-300 rounded-md"
               />
+                            <div
+                v-if="v$.password.$error"
+                class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none"
+              >
+                <ExclamationCircleIcon class="h-5 w-5 text-red-500" aria-hidden="true" />
+              </div>
             </div>
+                        <p
+              v-if="v$.password.$error"
+              class="mt-2 text-sm text-red-600 first-letter"
+              id="password-error"
+            >
+              {{ v$.password.$errors[0].$message }}
+            </p>
           </div>
           <div>
             <label for="confirm_password" class="block text-sm font-medium text-gray-700">
@@ -136,7 +180,20 @@ const handleRegisterClick = async (e: MouseEvent) => {
                 id="confirm_password"
                 class="focus:ring-indigo-500 focus:border-indigo-500 block w-full pl-10 sm:text-sm border-gray-300 rounded-md"
               />
+                                          <div
+                v-if="v$.confirm_password.$error"
+                class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none"
+              >
+                <ExclamationCircleIcon class="h-5 w-5 text-red-500" aria-hidden="true" />
+              </div>
             </div>
+                                    <p
+              v-if="v$.confirm_password.$error"
+              class="mt-2 text-sm text-red-600 first-letter"
+              id="confirm_password-error"
+            >
+              {{ v$.confirm_password.$errors[0].$message }}
+            </p>
           </div>
           <div>
             <label for="username" class="block text-sm font-medium text-gray-700">
@@ -156,19 +213,26 @@ const handleRegisterClick = async (e: MouseEvent) => {
                 class="focus:ring-indigo-500 focus:border-indigo-500 block w-full pl-10 sm:text-sm border-gray-300 rounded-md"
               />
               <div
-                v-if="formValue.errors.has('username')"
+                v-if="v$.username.$error"
                 class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none"
               >
                 <ExclamationCircleIcon class="h-5 w-5 text-red-500" aria-hidden="true" />
               </div>
             </div>
-            <p class="mt-2 text-sm text-red-600 first-letter" id="email-error">{{formValue.errors.first('username')}}</p>
+            <p
+              v-if="v$.username.$error"
+              class="mt-2 text-sm text-red-600 first-letter"
+              id="username-error"
+            >
+              {{ v$.username.$errors[0].$message }}
+            </p>
           </div>
           <div>
             <button
+              :disabled="v$.$invalid"
               @click.prevent="handleRegisterClick"
               type="submit"
-              class="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+              class="disabled:opacity-60 disabled:cursor-not-allowed group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
             >
               <svg
                 v-if="formLoading"
