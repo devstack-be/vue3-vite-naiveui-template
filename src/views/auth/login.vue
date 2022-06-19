@@ -1,10 +1,14 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { reactive, ref } from 'vue'
 import { LockClosedIcon, MailIcon, LoginIcon } from '@heroicons/vue/outline'
 import { useApi } from '@/composables/useApi'
 import { useUserStore } from '@/stores/user'
 import { useRouter } from 'vue-router'
 import {notify} from 'notiwind'
+import { useVuelidate } from '@vuelidate/core'
+import { email, required, sameAs, helpers } from '@vuelidate/validators'
+import { Messages as ValidatorMessages } from '@/utilities/form/validators'
+import { ExclamationCircleIcon } from '@heroicons/vue/solid'
 
 interface ModelType {
   email: string | null
@@ -15,17 +19,33 @@ const api = useApi()
 const router = useRouter()
 const formLoading = ref(false)
 const userStore = useUserStore()
-const formValue = new Form<ModelType>({
+const formValue = reactive<ModelType>({
     email: null, 
     password: null,
-}, {
-    http: api,
-});
+})
+const rules = {
+  email: { required, email },
+  password: { required },
+}
+const v$ = useVuelidate(rules, formValue, {
+  $lazy: true,
+  $autoDirty: true,
+})
 const handleLoginClick = async (e: MouseEvent) => {
   e.preventDefault()
+  const isFormCorrect = await v$.value.$validate()
+  if (!isFormCorrect) {
+    notify({
+      group: 'classic',
+      type: 'error',
+      title: 'Auth',
+      text: 'Please fill the form correctly!',
+    })
+    return
+  }
   formLoading.value = true
-  formValue
-    .post('api/auth/login', formValue.value)
+  api
+    .post('api/auth/login', formValue)
     .then((response: any) => {
       userStore.setLoggedIn(response)
       notify({
@@ -37,7 +57,7 @@ const handleLoginClick = async (e: MouseEvent) => {
       router.push('/')
     })
     .catch((error: any) => {
-      notify({
+    notify({
       group: "classic",
       type: 'error',
       title: "Auth",
@@ -87,7 +107,20 @@ const handleLoginClick = async (e: MouseEvent) => {
                 id="email"
                 class="focus:ring-indigo-500 focus:border-indigo-500 block w-full pl-10 sm:text-sm border-gray-300 rounded-md"
               />
+            <div
+                v-if="v$.email.$error"
+                class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none"
+              >
+                <ExclamationCircleIcon class="h-5 w-5 text-red-500" aria-hidden="true" />
+              </div>
             </div>
+            <p
+              v-if="v$.email.$error"
+              class="mt-2 text-sm text-red-600"
+              id="email-error"
+            >
+              {{ ValidatorMessages.email[v$.email.$errors[0].$validator]?.message }}
+            </p>
           </div>
           <div>
             <label for="password" class="block text-sm font-medium text-gray-700">
@@ -106,7 +139,20 @@ const handleLoginClick = async (e: MouseEvent) => {
                 id="password"
                 class="focus:ring-indigo-500 focus:border-indigo-500 block w-full pl-10 sm:text-sm border-gray-300 rounded-md"
               />
+            <div
+                v-if="v$.password.$error"
+                class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none"
+              >
+                <ExclamationCircleIcon class="h-5 w-5 text-red-500" aria-hidden="true" />
+              </div>
             </div>
+                        <p
+              v-if="v$.password.$error"
+              class="mt-2 text-sm text-red-600 first-letter"
+              id="password-error"
+            >
+              {{ ValidatorMessages.password[v$.password.$errors[0].$validator]?.message }}
+            </p>
           </div>
 
           <div class="flex items-center justify-between">

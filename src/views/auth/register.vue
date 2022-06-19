@@ -8,7 +8,7 @@ import { notify } from 'notiwind'
 
 import { useVuelidate } from '@vuelidate/core'
 import { email, required, sameAs, helpers } from '@vuelidate/validators'
-import messagesT from '@/utilities/form/validators'
+import { Messages as ValidatorMessages } from '@/utilities/form/validators'
 
 interface ModelType {
   password: string | null
@@ -27,7 +27,7 @@ const formValue = reactive<ModelType>({
 })
 const passwordRef = computed(() => formValue.password);
 const rules = {
-  username: { required: helpers.withMessage('Username is required', required) },
+  username: { required },
   email: { required, email },
   password: { required },
   confirm_password: { required, sameAs: sameAs(passwordRef) },
@@ -128,7 +128,7 @@ const handleRegisterClick = async (e: MouseEvent) => {
               class="mt-2 text-sm text-red-600"
               id="email-error"
             >
-              {{ messagesT.email[v$.email.$errors[0].$validator]?.message }}
+              {{ ValidatorMessages.email[v$.email.$errors[0].$validator]?.message }}
             </p>
           </div>
           <div>
@@ -160,7 +160,7 @@ const handleRegisterClick = async (e: MouseEvent) => {
               class="mt-2 text-sm text-red-600 first-letter"
               id="password-error"
             >
-              {{ v$.password.$errors[0].$message }}
+               {{ ValidatorMessages.password[v$.password.$errors[0].$validator]?.message }}
             </p>
           </div>
           <div>
@@ -192,7 +192,7 @@ const handleRegisterClick = async (e: MouseEvent) => {
               class="mt-2 text-sm text-red-600 first-letter"
               id="confirm_password-error"
             >
-              {{ v$.confirm_password.$errors[0].$message }}
+              {{ ValidatorMessages.confirm_password[v$.confirm_password.$errors[0].$validator]?.message }}
             </p>
           </div>
           <div>
@@ -224,7 +224,7 @@ const handleRegisterClick = async (e: MouseEvent) => {
               class="mt-2 text-sm text-red-600 first-letter"
               id="username-error"
             >
-              {{ v$.username.$errors[0].$message }}
+              {{ ValidatorMessages.username[v$.username.$errors[0].$validator]?.message }}
             </p>
           </div>
           <div>
