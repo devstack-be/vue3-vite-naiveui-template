@@ -19,7 +19,7 @@ const navigation = [
   { name: 'Users', to: {name: 'users'}, icon: UsersIcon, current: false },
 ]
 const secondaryNavigation = [
-  { name: 'Settings', href: '#', icon: CogIcon },
+  { name: 'Settings', to: '/', icon: CogIcon },
 ]
 const themeStore = useThemeStore()
 </script>
@@ -44,7 +44,7 @@ const themeStore = useThemeStore()
             </div>
             <nav class="mt-5 flex-shrink-0 h-full divide-y divide-cyan-800 overflow-y-auto" aria-label="Sidebar">
               <div class="px-2 space-y-1">
-                <RouterLink v-for="item in navigation" :key="item.name" :to="item.to" :class="[item.current ? 'bg-cyan-800 text-white' : 'text-cyan-100 hover:text-white hover:bg-cyan-600', 'group flex items-center px-2 py-2 text-sm font-medium rounded-md']" :aria-current="item.current ? 'page' : undefined">
+                <RouterLink v-for="item in navigation" :key="item.name" :to="item.to" :class="[item.current ? 'bg-cyan-800 text-white font-medium' : 'text-cyan-100 hover:text-white hover:bg-cyan-600', 'group flex items-center px-2 py-2 text-sm rounded-md']" :aria-current="item.current ? 'page' : undefined">
                   <component :is="item.icon" class="mr-4 flex-shrink-0 h-5 w-5 text-cyan-200" aria-hidden="true" />
                   {{ item.name }}
                 </RouterLink>
@@ -75,17 +75,25 @@ const themeStore = useThemeStore()
         </div>
         <nav class="mt-5 flex-1 flex flex-col divide-y divide-cyan-800 overflow-y-auto" aria-label="Sidebar">
           <div class="px-2 space-y-1">
-            <RouterLink v-for="item in navigation" :key="item.name" :to="item.to" :class="[item.current ? 'bg-cyan-800 text-white' : 'text-cyan-100 hover:text-white hover:bg-cyan-600', 'group flex items-center px-2 py-2 text-sm leading-6 font-medium rounded-md']" :aria-current="item.current ? 'page' : undefined">
-              <component :is="item.icon" class="mr-4 flex-shrink-0 h-5 w-5 text-cyan-200" aria-hidden="true" />
-              {{ item.name }}
-            </RouterLink>
+         <RouterLink v-for="item in navigation" :key="item.name" :to="item.to" custom v-slot="{ href, navigate, isActive, isExactActive }">
+
+        <a :class="[isActive ? 'bg-cyan-800 text-white font-medium' : 'text-cyan-100 hover:text-white hover:bg-cyan-600', 'group flex items-center px-2 py-2 text-sm rounded-md']" :aria-current="isActive ? 'page' : undefined" :href="href" @click="navigate">
+         <component :is="item.icon" class="mr-4 flex-shrink-0 h-5 w-5 text-cyan-200" aria-hidden="true" />
+         {{ item.name }}
+        </a>
+
+</RouterLink>
           </div>
           <div class="mt-6 pt-6">
             <div class="px-2 space-y-1">
-              <a v-for="item in secondaryNavigation" :key="item.name" :href="item.href" class="group flex items-center px-2 py-2 text-sm leading-6 font-medium rounded-md text-cyan-100 hover:text-white hover:bg-cyan-600">
-                <component :is="item.icon" class="mr-4 h-5 w-5 text-cyan-200" aria-hidden="true" />
-                {{ item.name }}
-              </a>
+                       <RouterLink v-for="item in secondaryNavigation" :key="item.name" :to="item.to" custom v-slot="{ href, navigate, isActive, isExactActive }">
+
+        <a :class="[isActive ? 'bg-cyan-800 text-white font-medium' : 'text-cyan-100 hover:text-white hover:bg-cyan-600', 'group flex items-center px-2 py-2 text-sm rounded-md']" :aria-current="isActive ? 'page' : undefined" :href="href" @click="navigate">
+         <component :is="item.icon" class="mr-4 flex-shrink-0 h-5 w-5 text-cyan-200" aria-hidden="true" />
+         {{ item.name }}
+        </a>
+
+</RouterLink>
             </div>
           </div>
         </nav>
