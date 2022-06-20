@@ -8,6 +8,7 @@ declare module '@vue/runtime-core' {
     AlertErrors: typeof import('./src/components/AlertErrors.vue')['default']
     Icon: typeof import('./src/components/Icon.vue')['default']
     MButton: typeof import('./src/components/MButton.vue')['default']
+    Modal: typeof import('./src/components/Modal.vue')['default']
     Notifications: typeof import('./src/components/Notifications.vue')['default']
     PreLoader: typeof import('./src/components/PreLoader.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']

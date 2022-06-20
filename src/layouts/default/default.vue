@@ -14,7 +14,7 @@ const userStore = useUserStore();
     <Sidebar />
     <Layout>
       <Header />
-      <Content />
+      <Content><slot/></Content>
       <Footer />
     </Layout>
   </div>

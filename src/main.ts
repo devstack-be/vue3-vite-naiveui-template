@@ -4,11 +4,10 @@ import { createPinia } from "pinia";
 import App from "./App.vue";
 import router from "./router";
 
-import naive from "naive-ui";
 import "vfonts/Lato.css";
 
-//import "@/css/helpers.css";
-import "@/css/main.css";
+import "@/css/tailwind.css";
+import "@/css/main.scss";
 import "nprogress/nprogress.css";
 
 import { createApi } from "@/composables/useApi";

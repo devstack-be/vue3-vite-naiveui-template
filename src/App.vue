@@ -2,7 +2,7 @@
 import { RouterView, useRoute, useRouter } from 'vue-router'
 import { useUserStore } from '@/stores/user'
 import { computed, watch } from 'vue'
-import { NNotificationProvider } from 'naive-ui';
+import { NNotificationProvider } from 'naive-ui'
 const router = useRouter()
 const route = useRoute()
 const userStore = useUserStore()
@@ -21,8 +21,12 @@ watch(
 </script>
 
 <template>
-    <Notifications/>
-    <Component :is="layout">
-      <RouterView />
-    </Component>
+  <Notifications />
+  <Component :is="layout">
+    <RouterView v-slot="{ Component }">
+      <Transition name="fade-slow" mode="out-in">
+        <component :is="Component" />
+      </Transition>
+    </RouterView>
+  </Component>
 </template>

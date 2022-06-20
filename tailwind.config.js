@@ -8,6 +8,15 @@ module.exports = {
   ],
   theme: {
     extend: {
+      keyframes: {
+        wiggle: {
+          '0%, 100%': { transform: 'rotate(-4deg)' },
+          '50%': { transform: 'rotate(4deg)' },
+        }
+      },
+      animation: {
+        wiggle: 'wiggle 0.5s ease-in-out infinite',
+      },
       fontSize: {
         'xs': '.75rem',
         'sm': '.85rem',
@@ -24,6 +33,7 @@ module.exports = {
         teal: colors.teal,
         cyan: colors.cyan,
         rose: colors.rose,
+        gray: colors.gray
       },
     },
   },

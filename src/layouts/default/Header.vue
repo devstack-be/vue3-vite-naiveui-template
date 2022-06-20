@@ -83,7 +83,7 @@ const userStore = useUserStore()
             leave-to-class="transform opacity-0 scale-95"
           >
             <MenuItems
-              class="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none"
+              class="z-10 origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none"
             >
               <MenuItem v-slot="{ active }">
                 <a
