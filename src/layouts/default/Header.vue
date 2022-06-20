@@ -21,7 +21,7 @@ const userStore = useUserStore()
     <button
       type="button"
       class="px-4 border-r border-gray-200 text-gray-400 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-cyan-500 lg:hidden"
-      @click="themeStore.setSidebarOpen(false)"
+      @click="themeStore.setSidebarOpen(true)"
     >
       <span class="sr-only">Open sidebar</span>
       <MenuAlt1Icon class="h-6 w-6" aria-hidden="true" />

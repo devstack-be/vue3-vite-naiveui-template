@@ -1,73 +1,55 @@
 <template>
-  <n-icon v-bind="props"><icon /></n-icon>
+  <Component :is="icon" v-bind="props" v-if="!props.loading"></Component>
+  <svg
+    v-else
+    class="animate-spin -ml-1 mr-3 h-5 w-5"
+    v-bind="props"
+    xmlns="http://www.w3.org/2000/svg"
+    fill="none"
+    viewBox="0 0 24 24"
+  >
+    <circle
+      class="opacity-25"
+      cx="12"
+      cy="12"
+      r="10"
+      stroke="currentColor"
+      stroke-width="4"
+    ></circle>
+    <path
+      class="opacity-75"
+      fill="currentColor"
+      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+    ></path>
+  </svg>
 </template>
 
 <script lang="ts" setup>
-import { NIcon } from "naive-ui";
+import { ExclamationCircleIcon as ExclamationCircleIconSolid } from '@heroicons/vue/solid'
 import {
-  MoonOutline as moon,
-  SunnyOutline as sunny,
-  AddCircle as create,
-  SaveOutline as save,
-  LogInOutline as login,
-  LogOutOutline as logout,
-  RefreshOutline as refresh,
-  SpeedometerOutline as dashboard,
-  CreateOutline as posts,
-  NewspaperOutline as pages,
-  ImagesOutline as media,
-  PeopleOutline as users,
-  ChatbubbleEllipsesOutline as comments,
-  ColorPaletteOutline as themes,
-  HardwareChipOutline as plugins,
-  BuildOutline as tools,
-  SettingsOutline as settings,
-  FlaskOutline as flask,
-  AddOutline as add,
-  HelpCircleOutline as help,
-  NotificationsOutline as notifications,
-  LogoGithub as github,
-  AlertCircleOutline as fallback,
-} from "@vicons/ionicons5";
-
-import { Pencil as edit, 
-Trash as destroy } from "@vicons/tabler";
-
+  SaveIcon as SaveIconOutline,
+  LockClosedIcon as LockClosedIconOutline,
+  MailIcon as MailIconOutline,
+  LoginIcon as LoginIconOutline,
+} from '@heroicons/vue/outline'
 const icons = {
-  destroy,
-  edit,
-  moon,
-  sunny,
-  create,
-  save,
-  login,
-  logout,
-  refresh,
-  dashboard,
-  posts,
-  pages,
-  media,
-  users,
-  comments,
-  themes,
-  plugins,
-  tools,
-  settings,
-  flask,
-  add,
-  help,
-  notifications,
-  github,
-  fallback,
+  ExclamationCircleIconSolid,
+  SaveIconOutline,
+  LockClosedIconOutline,
+  MailIconOutline,
+  LoginIconOutline,
 }
 
-type IconTypes = keyof typeof icons;
+type IconTypes = keyof typeof icons
 
 const props = defineProps({
-  ...NIcon.props,
+  loading: {
+    type: Boolean,
+    default: false
+  },
   type: {
     type: String,
-    default: "fallback",
+    default: 'fallback',
   },
 })
 

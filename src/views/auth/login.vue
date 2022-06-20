@@ -1,14 +1,15 @@
 <script setup lang="ts">
 import { reactive, ref } from 'vue'
-import { LockClosedIcon, MailIcon, LoginIcon } from '@heroicons/vue/outline'
+import { LockClosedIcon, MailIcon } from '@heroicons/vue/outline'
 import { useApi } from '@/composables/useApi'
 import { useUserStore } from '@/stores/user'
 import { useRouter } from 'vue-router'
 import {notify} from 'notiwind'
 import { useVuelidate } from '@vuelidate/core'
-import { email, required, sameAs, helpers } from '@vuelidate/validators'
+import { email, required } from '@vuelidate/validators'
 import { Messages as ValidatorMessages } from '@/utilities/form/validators'
 import { ExclamationCircleIcon } from '@heroicons/vue/solid'
+
 
 interface ModelType {
   email: string | null
@@ -47,12 +48,12 @@ const handleLoginClick = async (e: MouseEvent) => {
   api
     .post('api/auth/login', formValue)
     .then((response: any) => {
-      userStore.setLoggedIn(response)
+      userStore.setLoggedIn(response.data)
       notify({
       group: "classic",
       type: 'success',
       title: "Auth",
-      text: `Welcome back, ${response.user.username}`,
+      text: `Welcome back, ${response.data.user.username}`,
     })
       router.push('/')
     })
@@ -78,12 +79,12 @@ const handleLoginClick = async (e: MouseEvent) => {
       <p class="mt-2 text-center text-sm text-gray-600">
         Or
         {{ ' ' }}
-        <a
-          @click.prevent="router.push({ name: 'register' })"
+        <RouterLink
+          :to="{name: 'register' }"
           class="cursor-pointer font-medium text-indigo-600 hover:text-indigo-500"
         >
           register a new one
-        </a>
+        </RouterLink>
       </p>
     </div>
 
@@ -176,40 +177,8 @@ const handleLoginClick = async (e: MouseEvent) => {
           </div>
 
           <div>
-            <button
-              @click.prevent="handleLoginClick"
-              type="submit"
-              class="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-            >
-              <svg
-                v-if="formLoading"
-                class="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-              >
-                <circle
-                  class="opacity-25"
-                  cx="12"
-                  cy="12"
-                  r="10"
-                  stroke="currentColor"
-                  stroke-width="4"
-                ></circle>
-                <path
-                  class="opacity-75"
-                  fill="currentColor"
-                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                ></path>
-              </svg>
-              <span class="absolute left-0 inset-y-0 flex items-center pl-3">
-                <LoginIcon
-                  class="h-5 w-5 text-indigo-500 group-hover:text-indigo-400"
-                  aria-hidden="true"
-                />
-              </span>
-              Sign in
-            </button>
+            <MButton full type="submit" @click.prevent="handleLoginClick" 
+            :loading="formLoading" icon="LoginIconOutline">Sign in</MButton>
           </div>
         </form>
 
