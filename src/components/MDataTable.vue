@@ -3,21 +3,22 @@ export interface MDataTableHeaderType {
     text?: String
     align?: String
     sortable?: Boolean
-    value?: String
+    value: String
+    cellClass?: String
 }
-
 export interface MDataTableProps {
-  items?: any[]
+  items?: Array<any>
   columns?: Array<MDataTableHeaderType>
   loading?: boolean
+  search?: String
 }
 
 const props = withDefaults(defineProps<MDataTableProps>(), {
   loading: false,
   columns: undefined,
   items: () => [],
+  search: undefined
 })
-
 </script>
 <template>
 
@@ -50,7 +51,7 @@ const props = withDefaults(defineProps<MDataTableProps>(), {
             >
             <TransitionGroup name="fade-slow">
               <tr v-for="(item,i) in items" :key="i">
-                <td v-for="(column,k) in columns" :key="k" class="text-sm text-gray-500 px-6 py-4 whitespace-nowrap">
+                <td v-for="(column,k) in columns" :key="k" :class="column.cellClass" class="text-sm text-gray-500 px-6 py-4 whitespace-nowrap">
                   <slot :name="`item.${column.value}`" :item="item">
                     {{item[column.value]}}
                   </slot>

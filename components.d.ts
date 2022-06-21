@@ -5,7 +5,6 @@ import '@vue/runtime-core'
 
 declare module '@vue/runtime-core' {
   export interface GlobalComponents {
-    AlertErrors: typeof import('./src/components/AlertErrors.vue')['default']
     Icon: typeof import('./src/components/Icon.vue')['default']
     MButton: typeof import('./src/components/MButton.vue')['default']
     MDataTable: typeof import('./src/components/MDataTable.vue')['default']
