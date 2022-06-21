@@ -13,6 +13,13 @@ type RowData = {
 const api = useApi()
 const router = useRouter()
 const deleteUser = async (id: number) => {
+  if(id === 0) {
+        data.value.splice(
+      0,
+      1
+    )
+    return;
+  }
   api.delete(`api/users/${id}`).then((response) => {
     modalShow.value = false
     data.value.splice(
@@ -68,7 +75,7 @@ onMounted(() => {
         </div>
         <div class="mt-6 flex space-x-3 md:mt-0 md:ml-4">
           <MButton icon="UserAddIconOutline">Create user</MButton>
-          <MButton color="white"> Other action </MButton>
+          <MButton color="white" @click.prevent="deleteUser(0)"> Other action </MButton>
         </div>
       </div>
     </div>
@@ -97,13 +104,13 @@ onMounted(() => {
                 </th>
                 <th
                   scope="col"
-                  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden md:table-cell"
                 >
                   Title
                 </th>
                 <th
                   scope="col"
-                  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden md:table-cell"
                 >
                   Status
                 </th>
@@ -120,10 +127,8 @@ onMounted(() => {
             </thead>
             <tbody
               class="bg-white divide-y divide-gray-200"
-              tag="tbody"
-              name="list"
-              is="transition-group"
             >
+            <TransitionGroup name="fade-slow">
               <tr v-for="user in filteredData" :key="user.id">
                 <td class="px-6 py-4 whitespace-nowrap">
                   <div class="flex items-center">
@@ -144,11 +149,11 @@ onMounted(() => {
                     </div>
                   </div>
                 </td>
-                <td class="px-6 py-4 whitespace-nowrap">
+                <td class="px-6 py-4 whitespace-nowrap hidden md:table-cell">
                   <div class="text-sm text-gray-900">Title</div>
                   <div class="text-sm text-gray-500">Departement</div>
                 </td>
-                <td class="px-6 py-4 whitespace-nowrap">
+                <td class="px-6 py-4 whitespace-nowrap hidden md:table-cell">
                   <span
                     :class="[
                       user.is_active
@@ -174,6 +179,7 @@ onMounted(() => {
                   >
                 </td>
               </tr>
+            </TransitionGroup>
             </tbody>
           </table>
           <!-- Pagination -->
