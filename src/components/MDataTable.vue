@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { ArrowSmUpIcon } from '@heroicons/vue/outline'
 export interface MDataTableHeaderType {
     text?: String
     align?: String
@@ -42,7 +43,10 @@ const props = withDefaults(defineProps<MDataTableProps>(), {
                   scope="col"
                   class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                 >
-                  {{column.text}}
+                <span class="flex">
+                  {{column.text}} 
+                  <ArrowSmUpIcon v-if="column.sortable" class="w-4 h-4"></ArrowSmUpIcon>
+                </span>
                 </th>
               </tr>
             </thead>

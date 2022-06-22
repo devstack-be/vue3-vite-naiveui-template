@@ -17,7 +17,7 @@ const columns: Array<MDataTableHeaderType> = [
     sortable: false,
     value: 'username',
   },
-  { text: 'Status', value: 'is_active', sortable: false },
+  { text: 'Status', value: 'is_active', sortable: true },
   { text: '', value: 'actions', sortable: false, cellClass: 'text-right space-x-4' },
 ]
 const api = useApi()
@@ -103,16 +103,7 @@ onMounted(() => {
               </div>
             </template>
             <template #item.is_active="{ item }">
-              <span
-                :class="[
-                  item.is_active
-                    ? 'bg-green-100 text-green-800'
-                    : 'bg-gray-100 text-gray-800',
-                  'inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium capitalize',
-                ]"
-              >
-                {{ item.is_active ? 'Active' : 'Not active' }}
-              </span>
+              <MLabel :color="item.is_active ? 'success' : 'gray'"> {{ item.is_active ? 'Active' : 'Not active' }}</MLabel>
             </template>
             <template #item.actions="{ item }">
               <span class="cursor-pointer text-indigo-600 hover:text-indigo-900"
