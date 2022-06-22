@@ -7,7 +7,6 @@ declare module '@vue/runtime-core' {
   export interface GlobalComponents {
     Icon: typeof import('./src/components/Icon.vue')['default']
     MButton: typeof import('./src/components/MButton.vue')['default']
-    'MButton copy': typeof import('./src/components/MButton copy.vue')['default']
     MDataTable: typeof import('./src/components/MDataTable.vue')['default']
     'MDataTable copy': typeof import('./src/components/MDataTable copy.vue')['default']
     MLabel: typeof import('./src/components/MLabel.vue')['default']

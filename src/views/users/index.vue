@@ -12,13 +12,21 @@ type RowData = {
 }
 const columns: Array<MDataTableHeaderType> = [
   {
-    text: 'Name',
+    text: 'Id',
     align: 'start',
     sortable: false,
+    searchable: true,
+    value: 'id',
+  },
+  {
+    text: 'Name',
+    sortable: false,
+    searchable: false,
     value: 'username',
   },
-  { text: 'Status', value: 'is_active', sortable: true },
-  { text: '', value: 'actions', sortable: false, cellClass: 'text-right space-x-4' },
+  { text: 'Email', value: 'email', sortable: true, searchable: true },
+  { text: 'Status', value: 'is_active', sortable: false, searchable: false },
+  { text: '', value: 'actions', sortable: false, cellClass: 'text-right space-x-4', searchable: false },
 ]
 const api = useApi()
 const router = useRouter()
@@ -64,7 +72,6 @@ onMounted(() => {
                 <SearchIcon class="h-5 w-5 text-gray-400" aria-hidden="true" />
               </div>
               <input
-                @input="searchTrigger"
                 v-model="searchValue"
                 type="text"
                 name="searchValue"
