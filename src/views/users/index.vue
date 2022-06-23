@@ -14,7 +14,7 @@ const columns: Array<MDataTableHeaderType> = [
   {
     text: 'Id',
     align: 'start',
-    sortable: false,
+    sortable: true,
     searchable: true,
     value: 'id',
   },
@@ -76,13 +76,13 @@ onMounted(() => {
                 type="text"
                 name="searchValue"
                 id="searchValue"
-                placeholder="Search.."
+                placeholder="Search"
                 class="placeholder:opacity-50 h-8 focus:ring-indigo-500 focus:border-indigo-500 block w-1/2 pl-10 sm:text-sm border-gray-300 rounded-md shadow-sm"
               />
             </div>
           </div>
           <div class="mt-6 flex space-x-3 md:mt-0 md:ml-4">
-            <MButton icon="UserAddIconOutline">Create user</MButton>
+            <MButton icon="UserAddIconOutline" :to="{name: 'users.create'}">Create user</MButton>
             <MButton color="white" @click.prevent="deleteUser(0)"> Other action </MButton>
           </div>
         </div>

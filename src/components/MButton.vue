@@ -121,11 +121,11 @@ export default defineComponent({
       if (props.icon && (!props.loading || props.full)) {
         const icon = h(
             Icon, 
-            { 
+            {
               type: props.icon, 
               class: 'h-5 w-5 text-indigo-500 group-hover:text-indigo-400', 
               'aria-hidden': true,
-              }
+            }
           )
         const span = h('span', {
             class: 'absolute left-0 inset-y-0 flex items-center pl-3'

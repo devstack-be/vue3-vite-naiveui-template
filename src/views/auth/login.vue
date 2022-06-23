@@ -90,7 +90,14 @@ const handleLoginClick = async (e: MouseEvent) => {
 
     <div class="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
       <div class="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
+        {{formValue}}
         <form class="space-y-6" action="#" method="POST">
+          <MField label="Email">
+                <MControl icon="MailIconOutline">
+                  <MInput type="email" name="email" id="email" v-model="formValue.email"/>
+                </MControl>
+          </MField>
+
           <div>
             <label for="email" class="block text-sm font-medium text-gray-700"
               >Email address</label
@@ -100,7 +107,7 @@ const handleLoginClick = async (e: MouseEvent) => {
                 class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"
               >
                 <MailIcon class="h-5 w-5 text-gray-400" aria-hidden="true" />
-              </div>
+              </div>              
               <input
                 v-model="formValue.email"
                 type="email"
