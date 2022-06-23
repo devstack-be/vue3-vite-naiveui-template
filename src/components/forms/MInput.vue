@@ -9,7 +9,7 @@ export type MInputColor =
   | 'gray'
 
 export default defineComponent({
-    emits: ['update:modelValue'],
+  emits: ['update:modelValue'],
   props: {
     modelValue: {
       required: true,
