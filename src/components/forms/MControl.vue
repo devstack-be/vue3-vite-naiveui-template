@@ -67,7 +67,7 @@ export default defineComponent({
           class: 'mt-2 text-sm text-red-600',
           id: 'email-error'
         }, {
-          default: () => props.errors.length > 0 ? ValidatorMessages[props.errors[0].$property][props.errors[0].$validator]?.message : 'Unknown error'} )
+          default: () => ValidatorMessages[props.errors[0].$property][props.errors[0].$validator]?.message ?? props.errors[0]?.$message} )
       }else {
         validationMessage = null
       }
