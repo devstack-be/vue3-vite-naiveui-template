@@ -99,134 +99,26 @@ const handleRegisterClick = async (e: MouseEvent) => {
     <div class="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
       <div class="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
         <form class="space-y-6" action="#" method="POST">
-          <div>
-            <label for="email" class="block text-sm font-medium text-gray-700"
-              >Email address</label
-            >
-            <div class="mt-1 relative rounded-md shadow-sm">
-              <div
-                class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"
-              >
-                <MailIcon class="h-5 w-5 text-gray-400" aria-hidden="true" />
-              </div>
-              <input
-                v-model="formValue.email"
-                type="email"
-                name="email"
-                id="email"
-                class="focus:ring-indigo-500 focus:border-indigo-500 block w-full pl-10 sm:text-sm border-gray-300 rounded-md"
-              />
-              <div
-                v-if="v$.email.$error"
-                class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none"
-              >
-                <ExclamationCircleIcon class="h-5 w-5 text-red-500" aria-hidden="true" />
-              </div>
-            </div>
-            <p
-              v-if="v$.email.$error"
-              class="mt-2 text-sm text-red-600"
-              id="email-error"
-            >
-              {{ ValidatorMessages.email[v$.email.$errors[0].$validator]?.message ?? v$.email.$errors[0].$message }}
-            </p>
-          </div>
-          <div>
-            <label for="password" class="block text-sm font-medium text-gray-700">
-              Password
-            </label>
-            <div class="mt-1 relative rounded-md shadow-sm">
-              <div
-                class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"
-              >
-                <LockClosedIcon class="h-5 w-5 text-gray-400" aria-hidden="true" />
-              </div>
-              <input
-                v-model="formValue.password"
-                type="password"
-                name="password"
-                id="password"
-                class="focus:ring-indigo-500 focus:border-indigo-500 block w-full pl-10 sm:text-sm border-gray-300 rounded-md"
-              />
-                            <div
-                v-if="v$.password.$error"
-                class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none"
-              >
-                <ExclamationCircleIcon class="h-5 w-5 text-red-500" aria-hidden="true" />
-              </div>
-            </div>
-                        <p
-              v-if="v$.password.$error"
-              class="mt-2 text-sm text-red-600 first-letter"
-              id="password-error"
-            >
-               {{ ValidatorMessages.password[v$.password.$errors[0].$validator]?.message }}
-            </p>
-          </div>
-          <div>
-            <label for="confirm_password" class="block text-sm font-medium text-gray-700">
-              Re-enter password
-            </label>
-            <div class="mt-1 relative rounded-md shadow-sm">
-              <div
-                class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"
-              >
-                <LockClosedIcon class="h-5 w-5 text-gray-400" aria-hidden="true" />
-              </div>
-              <input
-                v-model="formValue.confirm_password"
-                type="password"
-                name="confirm_password"
-                id="confirm_password"
-                class="focus:ring-indigo-500 focus:border-indigo-500 block w-full pl-10 sm:text-sm border-gray-300 rounded-md"
-              />
-                                          <div
-                v-if="v$.confirm_password.$error"
-                class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none"
-              >
-                <ExclamationCircleIcon class="h-5 w-5 text-red-500" aria-hidden="true" />
-              </div>
-            </div>
-                                    <p
-              v-if="v$.confirm_password.$error"
-              class="mt-2 text-sm text-red-600 first-letter"
-              id="confirm_password-error"
-            >
-              {{ ValidatorMessages.confirm_password[v$.confirm_password.$errors[0].$validator]?.message }}
-            </p>
-          </div>
-          <div>
-            <label for="username" class="block text-sm font-medium text-gray-700">
-              Username
-            </label>
-            <div class="mt-1 relative rounded-md shadow-sm">
-              <div
-                class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"
-              >
-                <LockClosedIcon class="h-5 w-5 text-gray-400" aria-hidden="true" />
-              </div>
-              <input
-                v-model="formValue.username"
-                type="text"
-                name="username"
-                id="username"
-                class="focus:ring-indigo-500 focus:border-indigo-500 block w-full pl-10 sm:text-sm border-gray-300 rounded-md"
-              />
-              <div
-                v-if="v$.username.$error"
-                class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none"
-              >
-                <ExclamationCircleIcon class="h-5 w-5 text-red-500" aria-hidden="true" />
-              </div>
-            </div>
-            <p
-              v-if="v$.username.$error"
-              class="mt-2 text-sm text-red-600 first-letter"
-              id="username-error"
-            >
-              {{ ValidatorMessages.username[v$.username.$errors[0].$validator]?.message ?? v$.username.$errors[0].$message }}
-            </p>
-          </div>
+                    <MField label="Email address">
+            <MControl icon="MailIconOutline" :has-error="v$.email.$error" :errors="v$.email.$errors">
+              <MInput type="email" name="email" id="email" v-model="formValue.email"/>
+            </MControl>
+          </MField>
+          <MField label="Password">
+            <MControl icon="LockClosedIconOutline" :has-error="v$.password.$error" :errors="v$.password.$errors">
+              <MInput type="password" name="password" id="password" v-model="formValue.password"/>
+            </MControl>
+          </MField>
+          <MField label="Re-enter password">
+            <MControl icon="LockClosedIconOutline" :has-error="v$.confirm_password.$error" :errors="v$.confirm_password.$errors">
+              <MInput type="password" name="confirm_password" id="confirm_password" v-model="formValue.confirm_password"/>
+            </MControl>
+          </MField>
+          <MField label="Username">
+            <MControl icon="LockClosedIconOutline" :has-error="v$.username.$error" :errors="v$.username.$errors">
+              <MInput type="text" name="username" id="username" v-model="formValue.username"/>
+            </MControl>
+          </MField>
           <div>
           <MButton :disabled="v$.$invalid" type="submit" @click.prevent="handleRegisterClick" 
             :loading="formLoading" full icon="SaveIconOutline">Register</MButton>

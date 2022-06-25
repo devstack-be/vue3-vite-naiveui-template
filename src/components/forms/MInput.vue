@@ -84,3 +84,9 @@ export default defineComponent({
   },
 })
 </script>
+
+<style lang="scss">
+.control.has-icon input {
+  padding-left: 2.5rem;
+}
+</style>

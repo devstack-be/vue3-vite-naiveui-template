@@ -33,6 +33,7 @@ import {
   MailIcon as MailIconOutline,
   LoginIcon as LoginIconOutline,
 } from '@heroicons/vue/outline'
+
 const icons = {
   UserAddIconOutline,
   ExclamationCircleIconSolid,

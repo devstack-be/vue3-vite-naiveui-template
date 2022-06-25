@@ -1,6 +1,7 @@
 <script lang="ts">
 import { computed, h, VNode, defineComponent } from 'vue'
 import Icon from '@/components/Icon.vue'
+import { Messages as ValidatorMessages } from '@/utilities/form/validators'
 
 export default defineComponent({
   name: 'MControl',
@@ -13,10 +14,15 @@ export default defineComponent({
       type: Boolean,
       default: undefined,
     },
+    errors: {
+      type: Array,
+      default: []
+    }
   },
   setup(props, { slots }) {
     const controlClasees = computed(() => [
       'control mt-1 relative rounded-md shadow-sm',
+      props.icon && 'has-icon'
     ])
 
     let divIcon: VNode | null = null
@@ -34,18 +40,51 @@ export default defineComponent({
           ),
         )
     }
-
+    let validationIcon: VNode | null = null
+    const getValidationIcon = () => {
+      if (props.hasError) {
+        validationIcon = h('div', 
+        {
+            class: 'absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none'
+        }, h(
+            Icon, 
+            {
+              type: 'ExclamationCircleIconSolid', 
+              class: 'h-5 w-5 text-red-500', 
+              'aria-hidden': true,
+            }
+          ),
+        )
+    }else{
+      validationIcon = null
+    }
+      return validationIcon
+    }
+    let validationMessage: VNode | null = null
+    const getValidationMessage =  () => {
+      if(props.hasError) {
+        validationMessage = h('p', {
+          class: 'mt-2 text-sm text-red-600',
+          id: 'email-error'
+        }, {
+          default: () => props.errors.length > 0 ? ValidatorMessages[props.errors[0].$property][props.errors[0].$validator]?.message : 'Unknown error'} )
+      }else {
+        validationMessage = null
+      }
+      return validationMessage
+    }
     return () => {
       const slotDefault = slots.default?.()
       const slotExtra = slots.extra?.()
-
-      return h(
+      return [h(
         'div',
         {
           class: controlClasees.value,
         },
-        [divIcon,slotDefault, slotExtra]
-      )
+        [divIcon, slotDefault, getValidationIcon(), slotExtra],
+      ),
+      getValidationMessage()
+      ]
     }
   },
 })
