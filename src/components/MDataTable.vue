@@ -1,6 +1,16 @@
 <script setup lang="ts">
 import { ArrowSmUpIcon, ArrowSmDownIcon, SwitchVerticalIcon } from '@heroicons/vue/outline'
-import { computed, ref, watchEffect } from 'vue'
+import {
+  InjectionKey,
+  defineComponent,
+  computed,
+  reactive,
+  ref,
+  h,
+  watch,
+  provide,
+  watchEffect,
+} from 'vue'
 import { useDebounce } from '@vueuse/core'
 
 export type VFlexTableWrapperSortFunction<T = any> = (parameters: {
@@ -26,10 +36,15 @@ export interface MDataTableProps {
   loading?: boolean
   search?: String
   sort?: String
+  limit?: number
+  total?: number
+  page?: number
 }
 const emits = defineEmits<{
   (e: 'update:search', value: any): void
   (e: 'update:sort', value: any): void
+  (e: 'update:limit', value: any): void
+  (e: 'update:page', value: any): void
 }>()
 
 const props = withDefaults(defineProps<MDataTableProps>(), {
@@ -37,6 +52,9 @@ const props = withDefaults(defineProps<MDataTableProps>(), {
   columns: undefined,
   items: () => [],
   search: undefined,
+  limit: undefined,
+  total: undefined,
+  page: undefined
 })
 //Data//
 const rawData = ref<any[]>()
@@ -78,6 +96,28 @@ const searchInput = computed<any>({
   },
 })
 const searchTerm = useDebounce(searchInput, 300)
+    const defaultPage = ref(1)
+    const page = computed({
+      get: () => props.page ?? defaultPage.value,
+      set(value) {
+        if (props.page === undefined) {
+          defaultPage.value = value
+        } else {
+          emits('update:page', value)
+        }
+      },
+    })
+    const defaultLimit = ref(1)
+    const limit = computed({
+      get: () => Math.max(1, props.limit ?? defaultLimit.value),
+      set(value) {
+        if (props.limit === undefined) {
+          defaultLimit.value = value
+        } else {
+          emits('update:limit', value)
+        }
+      },
+    })
 
 //FilteredItems//
 const filteredItems = computed(() => {
@@ -158,13 +198,34 @@ const sortedItems = computed(() => {
       let data = sortedItems.value
 
       // paginate data
-      return data
-    })    
+      return data?.slice(start.value, start.value + limit.value)
+    })  
+    const total = computed(() => props.total ?? sortedItems.value?.length ?? 0)
+    const start = computed(() => (page.value - 1) * limit.value)
+    const totalPages = computed(() =>
+      total.value ? Math.ceil(total.value / limit.value) : 0
+    )  
+
+    watch([searchTerm, limit], () => {
+      if (page.value !== 1) {
+        page.value = 1
+      }
+    })
 </script>
 <template>
   <div
     class="align-middle min-w-full overflow-x-auto shadow overflow-hidden sm:rounded-lg"
   >
+  page:
+  {{page}}
+  total:
+  {{total}}
+  start:
+  {{start}}
+  limit:
+  {{limit}}
+  totalPages:
+  {{totalPages}}
     <div
       v-if="loading"
       class="h-0 inset-1/2 sticky flex items-center justify-center space-x-2 animate-[pulse_1s_ease-in-out_infinite]"
@@ -223,6 +284,14 @@ const sortedItems = computed(() => {
       </tbody>
     </table>
     <!-- Pagination -->
+    <MPagination
+            v-model:current-page="page"
+        class="mt-6"
+        :item-per-page="limit"
+        :total-items="total"
+        :max-links-displayed="5"
+        no-router
+    ></MPagination>
     <nav
       class="bg-gray-100 px-4 py-3 flex items-center justify-between border-t border-gray-200 sm:px-6"
       aria-label="Pagination"
@@ -231,7 +300,7 @@ const sortedItems = computed(() => {
         <p class="text-sm text-gray-700">
           Showing <span class="font-medium">1</span> to
           <span class="font-medium">10</span> of
-          <span class="font-medium">500</span> results
+          <span class="font-medium">{{items.length}}</span> results
         </p>
       </div>
       <div class="flex-1 flex justify-between sm:justify-end">

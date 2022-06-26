@@ -1,7 +1,7 @@
 <script lang="ts">
 import type { PropType } from 'vue'
 import { computed, defineComponent, h } from 'vue'
-export type MInputColor =
+export type MCheckboxColor =
   | 'primary'
   | 'secondary'
   | 'white'
@@ -12,12 +12,17 @@ export default defineComponent({
   emits: ['update:modelValue'],
   props: {
     modelValue: {
+      type: Boolean,
       required: true,
     },
+    label: {
+      type: String,
+      default: undefined
+    },
     color: {
-      type: String as PropType<MInputColor>,
+      type: String as PropType<MCheckboxColor>,
       default: 'primary',
-      validator: (value: MInputColor) => {
+      validator: (value: MCheckboxColor) => {
         // The value must match one of these strings
         if (
           [
@@ -37,10 +42,6 @@ export default defineComponent({
         return true
       },
     },
-    full: {
-      type: Boolean,
-      default: true,
-    },
     rounded: {
       type: String,
       default: 'md',
@@ -50,9 +51,8 @@ export default defineComponent({
     const slotDefault = slots.default?.()
     const classes = computed(() => {
       return [
-        'block text-sm',
+        'h-4 w-4 mr-2',
         `rounded-${props.rounded}`,
-        props.full && 'w-full',
         getColors()
       ]
     })
@@ -60,7 +60,7 @@ export default defineComponent({
       let colors = ''
       switch (props.color) {     
         case 'primary':
-          colors = 'focus:ring-indigo-500 focus:border-indigo-500 border-gray-300'
+          colors = 'text-indigo-600 focus:ring-indigo-500 border-gray-300'
           break;
         default:
           colors = '' 
@@ -68,17 +68,21 @@ export default defineComponent({
       }
       return colors
     }
-
     return () => {
-      return h(
-        'textarea',
+      return h('label', 
+      {
+        class: 'ml-2 text-sm text-gray-900'
+      },
+      [h(
+        'input',
         {
+          type: 'checkbox',
           ...attrs,
           class: [...classes.value],
           value: props.modelValue,
-          onInput: (val:any) => emit('update:modelValue', val.target.value)
+          onChange: (val:any) => emit('update:modelValue', Boolean(!props.modelValue))
         },
-        slotDefault
+        slotDefault), props.label]
       )
     }
   },

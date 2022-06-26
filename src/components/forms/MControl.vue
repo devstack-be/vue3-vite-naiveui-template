@@ -21,7 +21,7 @@ export default defineComponent({
   },
   setup(props, { slots }) {
     const controlClasees = computed(() => [
-      'control mt-1 relative rounded-md shadow-sm',
+      'control mt-1 relative',
       props.icon && 'has-icon'
     ])
 

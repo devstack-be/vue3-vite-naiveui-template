@@ -157,7 +157,7 @@ onMounted(() => {
                       />
                     </MControl>
                   </MField>
-                  <MField class="col-span-6 sm:col-span-3" label="Lastname">
+                  <MField class="col-span-6 sm:col-span-3" label="Lastname" for="lastname">
                     <MControl
                       :has-error="v$.lastname.$error"
                       :errors="v$.lastname.$errors"
@@ -181,18 +181,16 @@ onMounted(() => {
                       />
                     </MControl>
                   </MField>
-                  <div class="flex items-center col-span-6 sm:col-span-3">
-                    <input
-                      v-model="formValue.is_active"
-                      id="remember-me"
-                      name="remember-me"
-                      type="checkbox"
-                      class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
-                    />
-                    <label for="remember-me" class="ml-2 block text-sm text-gray-900">
-                      Is active
-                    </label>
-                  </div>
+                  <MField class="flex items-center col-span-6 sm:col-span-3">
+                    <MControl>
+                      <MCheckbox
+                        label="Is active"
+                        name="is_active"
+                        id="is_active"
+                        v-model="formValue.is_active"
+                      />
+                    </MControl>
+                  </MField>
                 </div>
               </div>
               <div class="px-4 py-3 bg-gray-50 text-right sm:px-6">

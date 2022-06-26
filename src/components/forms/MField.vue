@@ -21,7 +21,7 @@ const hasLabel = computed(() => Boolean(slots?.label?.() || props.label))
   >
 
     <template v-if="hasLabel">
-      <label class="block text-sm font-medium text-gray-700" for="test" >
+      <label class="block text-sm font-medium text-gray-700">
         <slot name="label">{{ props.label }}</slot>
       </label>
       <slot></slot>
