@@ -50,7 +50,7 @@ export default defineComponent({
     const slotDefault = slots.default?.()
     const classes = computed(() => {
       return [
-        'block text-sm h-9',
+        'block text-sm',
         `rounded-${props.rounded}`,
         props.full && 'w-full',
         getColors()
@@ -71,7 +71,7 @@ export default defineComponent({
 
     return () => {
       return h(
-        'input',
+        'textarea',
         {
           ...attrs,
           class: [...classes.value],

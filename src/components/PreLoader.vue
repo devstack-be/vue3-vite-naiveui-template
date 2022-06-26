@@ -22,22 +22,22 @@
   display: block;
   width: 10px;
   height: 10px;
-  background: #eee;
+  background: #eef2ff;
   border-radius: 50%;
   margin: 0 5px;
   box-shadow: 0 2px 2px rgba(0, 0, 0, 0.2);
 }
 
 .loader span:nth-child(2) {
-  background: #f07e6e;
+  background: #c7d2fe;
 }
 
 .loader span:nth-child(3) {
-  background: #84cdfa;
+  background: #818cf8;
 }
 
 .loader span:nth-child(4) {
-  background: #5ad1cd;
+  background: #3730a3;
 }
 
 .loader span:not(:last-child) {

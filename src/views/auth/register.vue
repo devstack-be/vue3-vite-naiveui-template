@@ -1,14 +1,11 @@
 <script setup lang="ts">
 import { computed, reactive, ref } from 'vue'
-import { LockClosedIcon, MailIcon, SaveIcon } from '@heroicons/vue/outline'
-import { ExclamationCircleIcon } from '@heroicons/vue/solid'
 import { useApi } from '@/composables/useApi'
 import { useRouter } from 'vue-router'
 import { notify } from 'notiwind'
 
 import { useVuelidate } from '@vuelidate/core'
-import { email, required, sameAs, helpers } from '@vuelidate/validators'
-import { Messages as ValidatorMessages } from '@/utilities/form/validators'
+import { email, required, sameAs } from '@vuelidate/validators'
 
 interface ModelType {
   password: string | null

@@ -7,7 +7,7 @@ interface IMessages {
     [key: string]: Imessage
   }
 }
-
+export const isOptional = (value:any) => !value || value
 export const Messages: IMessages = {
   email: {
     required: {

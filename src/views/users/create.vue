@@ -1,66 +1,83 @@
 <script setup lang="ts">
-import { ref, onMounted, h } from 'vue'
-import { useRouter } from 'vue-router'
+import { computed, reactive, ref } from 'vue'
 import { useApi } from '@/composables/useApi'
-import { SearchIcon } from '@heroicons/vue/outline'
-import { MDataTableHeaderType } from '@/components/MDataTable.vue'
-type RowData = {
-  id: number
-  email: string
-  username: string
+import { useRouter } from 'vue-router'
+import { notify } from 'notiwind'
+
+import { useVuelidate } from '@vuelidate/core'
+import { email, required, sameAs } from '@vuelidate/validators'
+
+interface ModelType {
+  password: string | null
+  confirm_password: string | null
+  email: string | null
+  username: string | null
   is_active: boolean
 }
-const columns: Array<MDataTableHeaderType> = [
-  {
-    text: 'Id',
-    align: 'start',
-    sortable: true,
-    searchable: true,
-    value: 'id',
-  },
-  {
-    text: 'Name',
-    sortable: false,
-    searchable: false,
-    value: 'username',
-  },
-  { text: 'Email', value: 'email', sortable: true, searchable: true },
-  { text: 'Status', value: 'is_active', sortable: false, searchable: false },
-  { text: '', value: 'actions', sortable: false, cellClass: 'text-right space-x-4', searchable: false },
-]
 const api = useApi()
 const router = useRouter()
-const deleteUser = async (id: number) => {
-  if (id === 0) {
-    data.value.splice(0, 1)
+const formLoading = ref(false)
+const formValue = reactive<ModelType>({
+  password: null,
+  confirm_password: null,
+  email: null,
+  username: null,
+  is_active: false,
+})
+const passwordRef = computed(() => formValue.password);
+const rules = {
+  username: { required },
+  email: { required, email },
+  password: { required },
+  confirm_password: { required, sameAs: sameAs(passwordRef) },
+}
+const $externalResults = ref({}) // works with reactive({}) too.
+const v$ = useVuelidate(rules, formValue, {
+  $externalResults,
+  $lazy: true,
+  $autoDirty: true,
+})
+const handleCreateClick = async (e: MouseEvent) => {
+  e.preventDefault()
+  const isFormCorrect = await v$.value.$validate()
+  if (!isFormCorrect) {
+    notify({
+      group: 'classic',
+      type: 'error',
+      title: 'Auth',
+      text: 'Please fill the form correctly!',
+    })
     return
   }
-  api.delete(`api/users/${id}`).then((response) => {
-    modalShow.value = false
-    data.value.splice(
-      data.value.findIndex((e) => e.id === id),
-      1
-    )
-  })
+  formLoading.value = true
+  api
+    .post('api/users', formValue)
+    .then((_response: any) => {
+      notify({
+        group: 'classic',
+        type: 'success',
+        title: 'User',
+        text: 'User created successfully!',
+      })
+      router.push({ name: 'users' })
+    })
+    .catch((error: any) => {
+      if (error.response && error.response.data.errors) {
+        $externalResults.value = error.response.data.errors
+      }
+      notify({
+        group: 'classic',
+        type: 'error',
+        title: 'User',
+        text: 'Validation failed!',
+      })
+    })
+    .then(() => (formLoading.value = false))
 }
-const isLoading = ref(true)
-const total = ref()
-const data = ref<RowData[] | []>([])
-const filteredData = ref<RowData[] | []>([])
-const searchValue = ref()
-const modalShow = ref(false)
-const selectedUser = ref()
-onMounted(() => {
-  api.get('api/users').then((response) => {
-    data.value = response.data.users
-    total.value = response.data.usersCount
-    isLoading.value = false
-  })
-})
 </script>
 <template>
   <main class="flex-1 pb-8">
-    <div class="mt-8">
+    <div>
       <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="md:flex md:items-center md:justify-between">
             <h2 class="mt-8 text-lg leading-6 font-medium text-gray-900">Create User</h2>
@@ -72,55 +89,35 @@ onMounted(() => {
           <div class="shadow overflow-hidden sm:rounded-md">
             <div class="px-4 py-5 bg-white sm:p-6">
               <div class="grid grid-cols-6 gap-6">
-                <div class="col-span-6 sm:col-span-3">
-                  <label for="first-name" class="block text-sm font-medium text-gray-700">First name</label>
-                  <input type="text" name="first-name" id="first-name" autocomplete="given-name" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
-                </div>
-
-                <div class="col-span-6 sm:col-span-3">
-                  <label for="last-name" class="block text-sm font-medium text-gray-700">Last name</label>
-                  <input type="text" name="last-name" id="last-name" autocomplete="family-name" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm text-sm border-gray-300 rounded-md">
-                </div>
-
-                <div class="col-span-6 sm:col-span-3">
-                  <label for="email-address" class="block text-sm font-medium text-gray-700">Email address</label>
-                  <input type="text" name="email-address" id="email-address" autocomplete="email" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
-                </div>
-
-                <div class="col-span-6 sm:col-span-3">
-                  <label for="country" class="block text-sm font-medium text-gray-700">Country</label>
-                  <select id="country" name="country" autocomplete="country-name" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-                    <option>United States</option>
-                    <option>Canada</option>
-                    <option>Mexico</option>
-                  </select>
-                </div>
-
-                <div class="col-span-6">
-                  <label for="street-address" class="block text-sm font-medium text-gray-700">Street address</label>
-                  <input type="text" name="street-address" id="street-address" autocomplete="street-address" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
-                </div>
-
-                <div class="col-span-6 sm:col-span-6 lg:col-span-2">
-                  <label for="city" class="block text-sm font-medium text-gray-700">City</label>
-                  <input type="text" name="city" id="city" autocomplete="address-level2" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
-                </div>
-
-                <div class="col-span-6 sm:col-span-3 lg:col-span-2">
-                  <label for="region" class="block text-sm font-medium text-gray-700">State / Province</label>
-                  <input type="text" name="region" id="region" autocomplete="address-level1" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
-                </div>
-
-                <div class="col-span-6 sm:col-span-3 lg:col-span-2">
-                  <label for="postal-code" class="block text-sm font-medium text-gray-700">ZIP / Postal code</label>
-                  <input type="text" name="postal-code" id="postal-code" autocomplete="postal-code" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
-                </div>
+                    <MField class="col-span-6 sm:col-span-3" label="Email address">
+            <MControl icon="MailIconOutline" :has-error="v$.email.$error" :errors="v$.email.$errors">
+              <MInput type="email" name="email" id="email" v-model="formValue.email"/>
+            </MControl>
+          </MField>
+                    <MField class="col-span-6 sm:col-span-3" label="Username">
+            <MControl icon="UserIconOutline" :has-error="v$.username.$error" :errors="v$.username.$errors">
+              <MInput type="text" name="username" id="username" v-model="formValue.username"/>
+            </MControl>
+          </MField>
+                    <MField class="col-span-6 sm:col-span-3" label="Password">
+            <MControl icon="LockClosedIconOutline" :has-error="v$.password.$error" :errors="v$.password.$errors">
+              <MInput type="password" name="password" id="password" v-model="formValue.password"/>
+            </MControl>
+          </MField>
+          <MField class="col-span-6 sm:col-span-3" label="Re-enter password">
+            <MControl icon="LockClosedIconOutline" :has-error="v$.confirm_password.$error" :errors="v$.confirm_password.$errors">
+              <MInput type="password" name="confirm_password" id="confirm_password" v-model="formValue.confirm_password"/>
+            </MControl>
+          </MField>
+            <div class="flex items-center">
+              <input v-model="formValue.is_active" id="remember-me" name="remember-me" type="checkbox" class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded" />
+              <label for="remember-me" class="ml-2 block text-sm text-gray-900"> Is active </label>
+            </div>
               </div>
             </div>
             <div class="px-4 py-3 bg-gray-50 text-right sm:px-6">
-              <button type="submit" class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                Save
-              </button>
+              <MButton :disabled="v$.$invalid" type="submit" @click.prevent="handleCreateClick" 
+            :loading="formLoading" full icon="PlusIconOutline">Create User</MButton>
             </div>
           </div>
         </form>

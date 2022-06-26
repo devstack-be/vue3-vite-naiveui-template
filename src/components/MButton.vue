@@ -123,7 +123,7 @@ export default defineComponent({
             Icon, 
             {
               type: props.icon, 
-              class: 'h-5 w-5 text-indigo-500 group-hover:text-indigo-400', 
+              class: 'h-5 w-5 text-indigo-500 group-hover:text-indigo-400 mr-1', 
               'aria-hidden': true,
             }
           )

@@ -60,7 +60,7 @@ onMounted(() => {
 </script>
 <template>
   <main class="flex-1 pb-8">
-    <div class="mt-8">
+    <div>
       <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="md:flex md:items-center md:justify-between">
           <div class="flex-1 min-w-0">
@@ -83,7 +83,6 @@ onMounted(() => {
           </div>
           <div class="mt-6 flex space-x-3 md:mt-0 md:ml-4">
             <MButton icon="UserAddIconOutline" :to="{name: 'users.create'}">Create user</MButton>
-            <MButton color="white" @click.prevent="deleteUser(0)"> Other action </MButton>
           </div>
         </div>
       </div>
@@ -113,7 +112,7 @@ onMounted(() => {
               <MLabel :color="item.is_active ? 'success' : 'gray'"> {{ item.is_active ? 'Active' : 'Not active' }}</MLabel>
             </template>
             <template #item.actions="{ item }">
-              <span class="cursor-pointer text-indigo-600 hover:text-indigo-900"
+              <span @click.prevent="router.push({name: 'users.edit', params: {id: item.id}})" class="cursor-pointer text-indigo-600 hover:text-indigo-900"
                 >Edit</span
               >
               <span

@@ -27,6 +27,9 @@
 <script lang="ts" setup>
 import { ExclamationCircleIcon as ExclamationCircleIconSolid } from '@heroicons/vue/solid'
 import {
+  PencilIcon as PencilIconOutline,
+  PlusIcon as PlusIconOutline,
+  UserIcon as UserIconOutline,
   UserAddIcon as UserAddIconOutline,
   SaveIcon as SaveIconOutline,
   LockClosedIcon as LockClosedIconOutline,
@@ -35,6 +38,9 @@ import {
 } from '@heroicons/vue/outline'
 
 const icons = {
+  PencilIconOutline,
+  PlusIconOutline,
+  UserIconOutline,
   UserAddIconOutline,
   ExclamationCircleIconSolid,
   SaveIconOutline,

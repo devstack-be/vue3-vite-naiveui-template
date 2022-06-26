@@ -64,10 +64,17 @@ export default defineComponent({
     const getValidationMessage =  () => {
       if(props.hasError) {
         validationMessage = h('p', {
-          class: 'mt-2 text-sm text-red-600',
-          id: 'email-error'
+          class: 'mt-2 text-sm text-red-600 first-letter:uppercase',
         }, {
-          default: () => ValidatorMessages[props.errors[0].$property][props.errors[0].$validator]?.message ?? props.errors[0]?.$message} )
+          default: () => {
+            if(props.errors.length > 0) {
+                if(ValidatorMessages.hasOwnProperty(props.errors[0].$property))
+                  if(ValidatorMessages[props.errors[0].$property].hasOwnProperty(props.errors[0].$validator))
+                    return ValidatorMessages[props.errors[0].$property][props.errors[0].$validator].message
+              return props.errors[0].$message
+            }
+            return 'Unknown error'
+      }})
       }else {
         validationMessage = null
       }
