@@ -1,3 +1,7 @@
 {
-  
+    "en": "English",
+    "fr": "French",
+    "users": {
+        "title": "Users"
+    }
 }

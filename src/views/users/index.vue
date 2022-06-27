@@ -64,7 +64,7 @@ onMounted(() => {
       <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="md:flex md:items-center md:justify-between">
           <div class="flex-1 min-w-0">
-            <h2 class="mt-8 text-lg leading-6 font-medium text-gray-900">Users</h2>
+            <h2 class="mt-8 text-lg leading-6 font-medium text-gray-900">{{ $t('Users')}}</h2>
             <div class="mt-1 relative">
               <div
                 class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"
