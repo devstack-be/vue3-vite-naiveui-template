@@ -1,16 +1,10 @@
 <script setup lang="ts">
-import { ArrowSmUpIcon, ArrowSmDownIcon, SwitchVerticalIcon } from '@heroicons/vue/outline'
 import {
-  InjectionKey,
-  defineComponent,
-  computed,
-  reactive,
-  ref,
-  h,
-  watch,
-  provide,
-  watchEffect,
-} from 'vue'
+  ArrowSmUpIcon,
+  ArrowSmDownIcon,
+  SwitchVerticalIcon,
+} from '@heroicons/vue/outline'
+import { computed, ref, watch, watchEffect } from 'vue'
 import { useDebounce } from '@vueuse/core'
 
 export type VFlexTableWrapperSortFunction<T = any> = (parameters: {
@@ -20,7 +14,6 @@ export type VFlexTableWrapperSortFunction<T = any> = (parameters: {
   a: T
   b: T
 }) => number
-
 
 export interface MDataTableHeaderType {
   text?: String
@@ -54,34 +47,32 @@ const props = withDefaults(defineProps<MDataTableProps>(), {
   search: undefined,
   limit: undefined,
   total: undefined,
-  page: undefined
+  page: undefined,
 })
 //Data//
 const rawData = ref<any[]>()
 //Sort//
-  
-    const defaultSort = ref<String>('')
-    const sort = computed({
-      get: () => props.sort ?? defaultSort.value,
-      set(value) {
-        if (props.sort === undefined) {
-          defaultSort.value = value
-        } else {
-          emits('update:sort', value)
-        }
-      },
-    })
-    const currentSortField = computed(() => sort.value?.includes(':') ? sort.value.split(':')[0] : '')
-    const isAsc = (key: any) => sort.value === `${key}:asc`
-    const isDesc = (key: any) => sort.value === `${key}:desc`
 
-    const nextSort = (key:any) => {
-      return isAsc(key)
-        ? `${key}:desc`
-        : isDesc(key)
-        ? undefined
-        : `${key}:asc`
+const defaultSort = ref<String>('')
+const sort = computed({
+  get: () => props.sort ?? defaultSort.value,
+  set(value) {
+    if (props.sort === undefined) {
+      defaultSort.value = value
+    } else {
+      emits('update:sort', value)
     }
+  },
+})
+const currentSortField = computed(() =>
+  sort.value?.includes(':') ? sort.value.split(':')[0] : ''
+)
+const isAsc = (key: any) => sort.value === `${key}:asc`
+const isDesc = (key: any) => sort.value === `${key}:desc`
+
+const nextSort = (key: any) => {
+  return isAsc(key) ? `${key}:desc` : isDesc(key) ? undefined : `${key}:asc`
+}
 
 //Search//
 const defaultSearchInput = ref<any>('')
@@ -96,28 +87,28 @@ const searchInput = computed<any>({
   },
 })
 const searchTerm = useDebounce(searchInput, 300)
-    const defaultPage = ref(1)
-    const page = computed({
-      get: () => props.page ?? defaultPage.value,
-      set(value) {
-        if (props.page === undefined) {
-          defaultPage.value = value
-        } else {
-          emits('update:page', value)
-        }
-      },
-    })
-    const defaultLimit = ref(1)
-    const limit = computed({
-      get: () => Math.max(1, props.limit ?? defaultLimit.value),
-      set(value) {
-        if (props.limit === undefined) {
-          defaultLimit.value = value
-        } else {
-          emits('update:limit', value)
-        }
-      },
-    })
+const defaultPage = ref(1)
+const page = computed({
+  get: () => props.page ?? defaultPage.value,
+  set(value) {
+    if (props.page === undefined) {
+      defaultPage.value = value
+    } else {
+      emits('update:page', value)
+    }
+  },
+})
+const defaultLimit = ref(10)
+const limit = computed({
+  get: () => Math.max(1, props.limit ?? defaultLimit.value),
+  set(value) {
+    if (props.limit === undefined) {
+      defaultLimit.value = value
+    } else {
+      emits('update:limit', value)
+    }
+  },
+})
 
 //FilteredItems//
 const filteredItems = computed(() => {
@@ -165,67 +156,57 @@ const defaultSortFunction: VFlexTableWrapperSortFunction = ({ key, order, a, b }
 }
 
 const sortedItems = computed(() => {
-        let items = filteredItems.value
-        if (sort.value && sort.value.includes(':')) {
-        const [sortField, sortOrder] = sort.value.split(':') as [string, 'desc' | 'asc']
+  let items = filteredItems.value
+  if (sort.value && sort.value.includes(':')) {
+    const [sortField, sortOrder] = sort.value.split(':') as [string, 'desc' | 'asc']
 
-        const sortingColumn = props.columns.find((column) => {
-          return column.sortable === true && column.value === sortField
+    const sortingColumn = props.columns.find((column) => {
+      return column.sortable === true && column.value === sortField
+    })
+
+    if (sortingColumn) {
+      const sorted = [...items]
+      sorted.sort((a, b) => {
+        return defaultSortFunction({
+          order: sortOrder,
+          column: sortingColumn,
+          key: sortingColumn.value,
+          a,
+          b,
         })
-
-        if (sortingColumn) {
-          const sorted = [...items]
-          sorted.sort((a, b) => {
-            return defaultSortFunction({
-              order: sortOrder,
-              column: sortingColumn,
-              key: sortingColumn.value,
-              a,
-              b,
-            })
-          })
-          items = sorted
-        }
-      }
-      return items
+      })
+      items = sorted
+    }
+  }
+  return items
 })
-    watchEffect(async () => {
-      rawData.value = props.items
-    })
-    const data = computed(() => {
-      if (!rawData.value) return rawData.value
+watchEffect(async () => {
+  rawData.value = props.items
+})
+const data = computed(() => {
+  if (!rawData.value) return rawData.value
 
-      let data = sortedItems.value
+  let data = sortedItems.value
 
-      // paginate data
-      return data?.slice(start.value, start.value + limit.value)
-    })  
-    const total = computed(() => props.total ?? sortedItems.value?.length ?? 0)
-    const start = computed(() => (page.value - 1) * limit.value)
-    const totalPages = computed(() =>
-      total.value ? Math.ceil(total.value / limit.value) : 0
-    )  
+  // paginate data
+  return data?.slice(start.value, start.value + limit.value)
+})
+const total = computed(() => props.total ?? sortedItems.value?.length ?? 0)
+const start = computed(() => (page.value - 1) * limit.value)
+const totalPages = computed(() =>
+  total.value ? Math.ceil(total.value / limit.value) : 0
+)
 
-    watch([searchTerm, limit], () => {
-      if (page.value !== 1) {
-        page.value = 1
-      }
-    })
+watch([searchTerm, limit], () => {
+  if (page.value !== 1) {
+    page.value = 1
+  }
+})
 </script>
 <template>
   <div
     class="align-middle min-w-full overflow-x-auto shadow overflow-hidden sm:rounded-lg"
   >
-  page:
-  {{page}}
-  total:
-  {{total}}
-  start:
-  {{start}}
-  limit:
-  {{limit}}
-  totalPages:
-  {{totalPages}}
     <div
       v-if="loading"
       class="h-0 inset-1/2 sticky flex items-center justify-center space-x-2 animate-[pulse_1s_ease-in-out_infinite]"
@@ -252,7 +233,10 @@ const sortedItems = computed(() => {
               v-if="sort && column.sortable && currentSortField === column.value"
               class="w-4 h-4 inline align-top"
             ></Component>
-            <SwitchVerticalIcon v-else-if="column.sortable" class="opacity-50 w-4 h-4 inline align-top"/>
+            <SwitchVerticalIcon
+              v-else-if="column.sortable"
+              class="opacity-50 w-4 h-4 inline align-top"
+            />
           </th>
         </tr>
       </thead>
@@ -284,38 +268,12 @@ const sortedItems = computed(() => {
       </tbody>
     </table>
     <!-- Pagination -->
-    <MPagination
-            v-model:current-page="page"
-        class="mt-6"
-        :item-per-page="limit"
-        :total-items="total"
-        :max-links-displayed="5"
-        no-router
-    ></MPagination>
-    <nav
-      class="bg-gray-100 px-4 py-3 flex items-center justify-between border-t border-gray-200 sm:px-6"
-      aria-label="Pagination"
-    >
-      <div class="hidden sm:block">
-        <p class="text-sm text-gray-700">
-          Showing <span class="font-medium">1</span> to
-          <span class="font-medium">10</span> of
-          <span class="font-medium">{{items.length}}</span> results
-        </p>
-      </div>
-      <div class="flex-1 flex justify-between sm:justify-end">
-        <a
-          href="#"
-          class="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"
-        >
-          Previous </a
-        ><a
-          href="#"
-          class="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"
-        >
-          Next
-        </a>
-      </div>
-    </nav>
+    <MSimplePagination
+      v-model:current-page="page"
+      :item-per-page="limit"
+      :total-items="total"
+      :total-raw="rawData.length"
+      no-router
+    ></MSimplePagination>
   </div>
 </template>

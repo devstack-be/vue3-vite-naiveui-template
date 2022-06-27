@@ -14,7 +14,7 @@ declare module '@vue/runtime-core' {
     MInput: typeof import('./src/components/forms/MInput.vue')['default']
     MLabel: typeof import('./src/components/MLabel.vue')['default']
     Modal: typeof import('./src/components/Modal.vue')['default']
-    MPagination: typeof import('./src/components/MPagination.vue')['default']
+    MSimplePagination: typeof import('./src/components/MSimplePagination.vue')['default']
     MTextarea: typeof import('./src/components/forms/MTextarea.vue')['default']
     Notifications: typeof import('./src/components/Notifications.vue')['default']
     PreLoader: typeof import('./src/components/PreLoader.vue')['default']
