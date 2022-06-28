@@ -89,7 +89,7 @@ onMounted(() => {
       </div>
       <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex flex-col mt-2">
-          <MDataTable limit="1" :search="searchValue" :loading="isLoading" :columns="columns" :items="data">
+          <MDataTable show-select :search="searchValue" :loading="isLoading" :columns="columns" :items="data">
             <template #item.username="{ item }">
               <div class="flex items-center">
                 <div class="flex-shrink-0 h-10 w-10">

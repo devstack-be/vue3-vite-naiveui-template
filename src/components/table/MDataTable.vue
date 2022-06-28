@@ -32,6 +32,7 @@ export interface MDataTableProps {
   limit?: number
   total?: number
   page?: number
+  showSelect?: boolean
 }
 const emits = defineEmits<{
   (e: 'update:search', value: any): void
@@ -48,6 +49,7 @@ const props = withDefaults(defineProps<MDataTableProps>(), {
   limit: undefined,
   total: undefined,
   page: undefined,
+  showSelect: false
 })
 //Data//
 const rawData = ref<any[]>()
@@ -219,12 +221,19 @@ watch([searchTerm, limit], () => {
     <table class="min-w-full divide-y divide-gray-200">
       <thead class="bg-gray-100">
         <tr>
+          <th v-if="showSelect" class="py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                  <MCheckbox
+                        name="checkbox_full"
+                        id="checkbox_full"
+                        rounded="md"
+                      />
+          </th>
           <th
             v-for="(column, k) in columns"
             :key="k"
             scope="col"
-            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-            :class="column.sortable && 'cursor-pointer'"
+            :class="column.align === 'start' ? 'pr-6 pl-2' : 'px-6', column.sortable && 'cursor-pointer' "
+            class="py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
             @click.prevent="sort = nextSort(column.value)"
           >
             {{ column.text }}
@@ -253,11 +262,18 @@ watch([searchTerm, limit], () => {
         </Transition>
         <TransitionGroup name="list">
           <tr v-for="(item, i) in data" :key="i">
+          <td v-if="showSelect" class="text-sm text-gray-500 py-4 whitespace-nowrap">
+                                              <MCheckbox
+                        name="checkbox_full"
+                        id="checkbox_full"
+                        rounded="md"
+                      />
+          </td>
             <td
               v-for="(column, k) in columns"
               :key="k"
-              :class="column.cellClass"
-              class="text-sm text-gray-500 px-6 py-4 whitespace-nowrap"
+              :class="column.cellClass, column.align === 'start' ? 'pr-6 pl-2' : 'px-6'"
+              class="text-sm text-gray-500 py-4 whitespace-nowrap"
             >
               <slot :name="`item.${column.value}`" :item="item">
                 {{ item[column.value] }}
