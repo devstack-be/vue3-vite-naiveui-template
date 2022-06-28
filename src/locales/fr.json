@@ -1,7 +1,23 @@
 {
-    "en": "Anglais",
-    "fr": "Français",
-    "users": {
-        "title": "Utilisateurs"
-    }
+  "en": "Anglais",
+  "fr": "Français",
+  "users": {
+    "title": "Utilisateurs"
+  },
+  "logout": "Se déconnecter",
+  "settings": "Paramètres",
+  "dashboard": {
+    "title": "Tableau de bord"
+  },
+  "fields" : {
+    "name": "Nom",
+    "email": {
+      "short": "Email",
+      "long": "Adresse e-mail"
+    },
+    "status": "Statut"
+  },
+  "search": "Rechercher",
+  "create": "Créer",
+  "info": "Informations"
 }

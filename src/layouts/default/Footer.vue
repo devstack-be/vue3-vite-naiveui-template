@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { defineComponent, h } from 'vue'
+import { useI18n } from 'vue-i18n';
 
 const navigation = [
   {
@@ -71,8 +72,14 @@ const navigation = [
     }),
   },
 ]
+const { t } = useI18n()
 </script>
-
+<i18n style="yaml">
+en:
+  copyright: 'All rights reserved.'
+fr:
+  copyright: 'Tous droits réservés'
+</i18n>
 <template>
   <footer>
     <div class="border-t border-gray-2O0 max-w-7xl mx-auto py-10 px-4 sm:px-6 md:flex md:items-center md:justify-between lg:px-8">
@@ -83,7 +90,7 @@ const navigation = [
         </a>
       </div>
       <div class="mt-8 md:mt-0 md:order-1">
-        <p class="text-center text-gray-400 text-tiny">&copy; 2022 Devstack © - All rights reserved.</p>
+        <p class="text-center text-gray-400 text-tiny">&copy; 2022 Devstack © - {{t('copyright')}}</p>
       </div>
     </div>
   </footer>

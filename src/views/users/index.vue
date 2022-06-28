@@ -1,16 +1,18 @@
 <script setup lang="ts">
-import { ref, onMounted, h } from 'vue'
+import { ref, onMounted, h, WritableComputedRef, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useApi } from '@/composables/useApi'
 import { SearchIcon } from '@heroicons/vue/outline'
 import { MDataTableHeaderType } from '@/components/MDataTable.vue'
+import { useI18n } from 'vue-i18n'
 type RowData = {
   id: number
   email: string
   username: string
   is_active: boolean
 }
-const columns: Array<MDataTableHeaderType> = [
+const { t } = useI18n()
+const columns: WritableComputedRef<MDataTableHeaderType> = computed(() => [
   {
     text: 'Id',
     align: 'start',
@@ -19,15 +21,15 @@ const columns: Array<MDataTableHeaderType> = [
     value: 'id',
   },
   {
-    text: 'Name',
+    text: t('fields.name'),
     sortable: false,
     searchable: false,
     value: 'username',
   },
-  { text: 'Email', value: 'email', sortable: true, searchable: true },
-  { text: 'Status', value: 'is_active', sortable: false, searchable: false },
+  { text: t('fields.email.short'), value: 'email', sortable: true, searchable: true },
+  { text: t('fields.status'), value: 'is_active', sortable: false, searchable: false },
   { text: '', value: 'actions', sortable: false, cellClass: 'text-right space-x-4', searchable: false },
-]
+])
 const api = useApi()
 const router = useRouter()
 const deleteUser = async (id: number) => {
@@ -46,7 +48,6 @@ const deleteUser = async (id: number) => {
 const isLoading = ref(true)
 const total = ref()
 const data = ref<RowData[] | []>([])
-const filteredData = ref<RowData[] | []>([])
 const searchValue = ref()
 const modalShow = ref(false)
 const selectedUser = ref()
@@ -64,7 +65,7 @@ onMounted(() => {
       <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="md:flex md:items-center md:justify-between">
           <div class="flex-1 min-w-0">
-            <h2 class="mt-8 text-lg leading-6 font-medium text-gray-900">{{ $t('Users')}}</h2>
+            <h2 class="mt-8 text-lg leading-6 font-medium text-gray-900">{{ $t('users.title')}}</h2>
             <div class="mt-1 relative">
               <div
                 class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"
@@ -76,19 +77,19 @@ onMounted(() => {
                 type="text"
                 name="searchValue"
                 id="searchValue"
-                placeholder="Search"
+                :placeholder="$t('search')"
                 class="placeholder:opacity-50 h-8 focus:ring-indigo-500 focus:border-indigo-500 block w-1/2 pl-10 sm:text-sm border-gray-300 rounded-md shadow-sm"
               />
             </div>
           </div>
           <div class="mt-6 flex space-x-3 md:mt-0 md:ml-4">
-            <MButton icon="UserAddIconOutline" :to="{name: 'users.create'}">Create user</MButton>
+            <MButton icon="UserAddIconOutline" :to="{name: 'users.create'}">{{$t('create')}}</MButton>
           </div>
         </div>
       </div>
       <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex flex-col mt-2">
-          <MDataTable :search="searchValue" :loading="isLoading" :columns="columns" :items="data">
+          <MDataTable limit="1" :search="searchValue" :loading="isLoading" :columns="columns" :items="data">
             <template #item.username="{ item }">
               <div class="flex items-center">
                 <div class="flex-shrink-0 h-10 w-10">

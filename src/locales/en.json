@@ -1,7 +1,23 @@
 {
-    "en": "English",
-    "fr": "French",
-    "users": {
-        "title": "Users"
-    }
+  "en": "English",
+  "fr": "French",
+  "users": {
+    "title": "Users"
+  },
+  "logout": "Log out",
+  "settings": "Settings",
+  "dashboard": {
+    "title": "Dashboard"
+  },
+  "fields" : {
+    "name": "Name",
+    "email": {
+      "short": "Email",
+      "long": "E-mail address"
+    },
+    "status": "Status"
+  },
+  "search": "Search",
+  "create": "Create",
+  "name": "Name"
 }

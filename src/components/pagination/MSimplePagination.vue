@@ -1,7 +1,4 @@
 <script setup lang="ts">
-import { computed } from 'vue'
-import { useRoute, RouteLocationOptions } from 'vue-router'
-
 export interface MSimplePaginationProps {
   itemPerPage: number
   totalItems: number
@@ -14,6 +11,10 @@ export interface MSimplePaginationProps {
 export interface MSimplePaginationEmits {
   (e: 'update:currentPage', currentPage: number): void
 }
+import { computed } from 'vue'
+import { useRoute, RouteLocationOptions } from 'vue-router'
+import { useI18n } from 'vue-i18n'
+const { t } = useI18n()
 
 const emits = defineEmits<MSimplePaginationEmits>()
 const props = withDefaults(defineProps<MSimplePaginationProps>(), {
@@ -57,7 +58,18 @@ const handleLinkClick = (e: MouseEvent, page = 1) => {
   }
 }
 </script>
-
+<i18n lang="yaml">
+en:
+  info: 'Showing {start} to {end} of {total} results'
+  filtered: '(filtered from {max} entries)'
+  previous: 'Previous'
+  next: 'Next'
+fr:
+  info: 'Affichage de {start} à {end} sur {total} entrées'
+  filtered: '(filtrées depuis {max} entrées)'
+  previous: 'Précédent'
+  next: 'Suivant'
+</i18n>
 <template>
   <nav
     class="bg-gray-100 px-4 py-3 flex items-center justify-between border-t border-gray-200 sm:px-6"
@@ -65,23 +77,27 @@ const handleLinkClick = (e: MouseEvent, page = 1) => {
   >
     <div class="hidden sm:block">
       <p class="text-sm text-gray-700">
-        Showing
-        <span class="font-medium">
-          {{
-            totalItems === 0
-              ? '0'
-              : currentPage === 1
-              ? '1'
-              : Math.ceil(1 + (currentPage - 1) * itemPerPage)
-          }}</span
-        >
-        to
-        <span class="font-medium">{{
-          Math.min(currentPage * itemPerPage, totalItems)
-        }}</span>
-        of <span class="font-medium">{{ totalItems }}</span> results
+        <i18n-t keypath="info">
+          <template v-slot:start>
+            <span class="font-medium">{{
+              totalItems === 0
+                ? '0'
+                : currentPage === 1
+                ? '1'
+                : Math.ceil(1 + (currentPage - 1) * itemPerPage)
+            }}</span>
+          </template>
+          <template v-slot:end>
+            <span class="font-medium">{{
+              Math.min(currentPage * itemPerPage, totalItems)
+            }}</span>
+          </template>
+          <template v-slot:total>
+            <span class="font-medium">{{ totalItems }}</span>
+          </template>
+        </i18n-t>
         <span v-if="totalItems != totalRaw"
-          >(filtered from {{ totalRaw }} total entries)</span
+          >&nbsp{{ t('filtered', { max: totalRaw }) }}</span
         >
       </p>
     </div>
@@ -94,7 +110,7 @@ const handleLinkClick = (e: MouseEvent, page = 1) => {
         @keydown.space.prevent="(e) => (e.target as HTMLAnchorElement).click()"
         @click="(e) => handleLinkClick(e, currentPage - 1)"
       >
-        Previous
+        {{t('previous')}}
       </RouterLink>
       <RouterLink
         :class="currentPage === lastPage && 'opacity-60 cursor-not-allowed'"
@@ -104,7 +120,7 @@ const handleLinkClick = (e: MouseEvent, page = 1) => {
         @keydown.space.prevent="(e) => (e.target as HTMLAnchorElement).click()"
         @click="(e) => handleLinkClick(e, currentPage + 1)"
       >
-        Next
+        {{t('next')}}
       </RouterLink>
     </div>
   </nav>
