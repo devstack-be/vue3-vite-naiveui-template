@@ -253,7 +253,7 @@ watch([searchTerm, limit], () => {
         <Transition name="fade">
           <tr v-if="filteredItems.length === 0 && !loading">
             <td
-              :colspan="columns?.length"
+              colspan="100%"
               class="italic text-center text-sm text-gray-400 px-6 py-4 whitespace-nowrap"
             >
               {{ items.length > 0 ? 'No matching records found' : 'No data available' }}
