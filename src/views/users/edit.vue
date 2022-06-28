@@ -77,6 +77,7 @@ const handleEditClick = async (e: MouseEvent) => {
   api
     .patch(`api/users/${route.params.id}`, formValue)
     .then((_response: any) => {
+      user.value = _response.data.user
       notify({
         group: 'classic',
         type: 'success',
@@ -183,7 +184,7 @@ onMounted(() => {
                   </MField>
                   <MField class="flex items-center col-span-6 sm:col-span-3">
                     <MControl>
-                      <MCheckbox
+                      <MSimpleCheckbox
                         label="Is active"
                         name="is_active"
                         id="is_active"

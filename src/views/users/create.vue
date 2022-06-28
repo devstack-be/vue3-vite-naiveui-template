@@ -24,7 +24,7 @@ const formValue = reactive<ModelType>({
   username: null,
   is_active: false,
 })
-const passwordRef = computed(() => formValue.password);
+const passwordRef = computed(() => formValue.password)
 const rules = {
   username: { required },
   email: { required, email },
@@ -80,47 +80,96 @@ const handleCreateClick = async (e: MouseEvent) => {
     <div>
       <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="md:flex md:items-center md:justify-between">
-            <h2 class="mt-8 text-lg leading-6 font-medium text-gray-900">Create User</h2>
+          <h2 class="mt-8 text-lg leading-6 font-medium text-gray-900">Create User</h2>
         </div>
       </div>
       <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex flex-col mt-2">
           <form action="#" method="POST">
-          <div class="shadow overflow-hidden sm:rounded-md">
-            <div class="px-4 py-5 bg-white sm:p-6">
-              <div class="grid grid-cols-6 gap-6">
-                    <MField class="col-span-6 sm:col-span-3" label="Email address">
-            <MControl icon="MailIconOutline" :has-error="v$.email.$error" :errors="v$.email.$errors">
-              <MInput type="email" name="email" id="email" v-model="formValue.email"/>
-            </MControl>
-          </MField>
-                    <MField class="col-span-6 sm:col-span-3" label="Username">
-            <MControl icon="UserIconOutline" :has-error="v$.username.$error" :errors="v$.username.$errors">
-              <MInput type="text" name="username" id="username" v-model="formValue.username"/>
-            </MControl>
-          </MField>
-                    <MField class="col-span-6 sm:col-span-3" label="Password">
-            <MControl icon="LockClosedIconOutline" :has-error="v$.password.$error" :errors="v$.password.$errors">
-              <MInput type="password" name="password" id="password" v-model="formValue.password"/>
-            </MControl>
-          </MField>
-          <MField class="col-span-6 sm:col-span-3" label="Re-enter password">
-            <MControl icon="LockClosedIconOutline" :has-error="v$.confirm_password.$error" :errors="v$.confirm_password.$errors">
-              <MInput type="password" name="confirm_password" id="confirm_password" v-model="formValue.confirm_password"/>
-            </MControl>
-          </MField>
-            <div class="flex items-center">
-              <input v-model="formValue.is_active" id="remember-me" name="remember-me" type="checkbox" class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded" />
-              <label for="remember-me" class="ml-2 block text-sm text-gray-900"> Is active </label>
-            </div>
+            <div class="shadow overflow-hidden sm:rounded-md">
+              <div class="px-4 py-5 bg-white sm:p-6">
+                <div class="grid grid-cols-6 gap-6">
+                  <MField class="col-span-6 sm:col-span-3" label="Email address">
+                    <MControl
+                      icon="MailIconOutline"
+                      :has-error="v$.email.$error"
+                      :errors="v$.email.$errors"
+                    >
+                      <MInput
+                        type="email"
+                        name="email"
+                        id="email"
+                        v-model="formValue.email"
+                      />
+                    </MControl>
+                  </MField>
+                  <MField class="col-span-6 sm:col-span-3" label="Username">
+                    <MControl
+                      icon="UserIconOutline"
+                      :has-error="v$.username.$error"
+                      :errors="v$.username.$errors"
+                    >
+                      <MInput
+                        type="text"
+                        name="username"
+                        id="username"
+                        v-model="formValue.username"
+                      />
+                    </MControl>
+                  </MField>
+                  <MField class="col-span-6 sm:col-span-3" label="Password">
+                    <MControl
+                      icon="LockClosedIconOutline"
+                      :has-error="v$.password.$error"
+                      :errors="v$.password.$errors"
+                    >
+                      <MInput
+                        type="password"
+                        name="password"
+                        id="password"
+                        v-model="formValue.password"
+                      />
+                    </MControl>
+                  </MField>
+                  <MField class="col-span-6 sm:col-span-3" label="Re-enter password">
+                    <MControl
+                      icon="LockClosedIconOutline"
+                      :has-error="v$.confirm_password.$error"
+                      :errors="v$.confirm_password.$errors"
+                    >
+                      <MInput
+                        type="password"
+                        name="confirm_password"
+                        id="confirm_password"
+                        v-model="formValue.confirm_password"
+                      />
+                    </MControl>
+                  </MField>
+                  <MField class="flex items-center col-span-6 sm:col-span-3">
+                    <MControl>
+                      <MSimpleCheckbox
+                        label="Is active"
+                        name="is_active"
+                        id="is_active"
+                        v-model="formValue.is_active"
+                      />
+                    </MControl>
+                  </MField>
+                </div>
+              </div>
+              <div class="px-4 py-3 bg-gray-50 text-right sm:px-6">
+                <MButton
+                  :disabled="v$.$invalid"
+                  type="submit"
+                  @click.prevent="handleCreateClick"
+                  :loading="formLoading"
+                  full
+                  icon="PlusIconOutline"
+                  >Create User</MButton
+                >
               </div>
             </div>
-            <div class="px-4 py-3 bg-gray-50 text-right sm:px-6">
-              <MButton :disabled="v$.$invalid" type="submit" @click.prevent="handleCreateClick" 
-            :loading="formLoading" full icon="PlusIconOutline">Create User</MButton>
-            </div>
-          </div>
-        </form>
+          </form>
         </div>
       </div>
     </div>

@@ -1,61 +1,39 @@
-<script lang="ts">
-import type { PropType } from 'vue'
-import { computed, defineComponent, h } from 'vue'
-export type MCheckboxColor =
-  | 'primary'
-  | 'secondary'
-  | 'white'
-  | 'success'
-  | 'gray'
+<script setup lang="ts">
+import { computed } from 'vue'
 
-export default defineComponent({
-  emits: ['update:modelValue'],
-  props: {
-    modelValue: {
-      type: Boolean,
-      required: true,
-    },
-    label: {
-      type: String,
-      default: undefined
-    },
-    color: {
-      type: String as PropType<MCheckboxColor>,
-      default: 'primary',
-      validator: (value: MCheckboxColor) => {
-        // The value must match one of these strings
-        if (
-          [
-            'primary',
-            'secondary',
-            'white',
-            'success',
-            'gray'
-          ].indexOf(value) === -1
-        ) {
-          console.warn(
-            `MInput: invalid "${value}" color. Should be primary, secondary or white.`
-          )
-          return false
-        }
+export type MComplexCheckboxColor = 'primary' | 'info' | 'success' | 'warning' | 'danger'
+export interface MComplexCheckboxEmits {
+  (e: 'update:modelValue', value: (string | number)[]): void
+}
+export interface MComplexCheckboxProps {
+  value?: string | number
+  label?: string
+  color?: MComplexCheckboxColor
+  modelValue?: (string | number)[]
+  rounded?: string
+}
 
-        return true
-      },
-    },
-    rounded: {
-      type: String,
-      default: 'md',
-    },
-  },
-  setup(props, { emit, slots, attrs }) {
-    const slotDefault = slots.default?.()
-    const classes = computed(() => {
-      return [
-        'h-4 w-4 mr-2',
-        `rounded-${props.rounded}`,
-        getColors()
-      ]
-    })
+const emit = defineEmits<MComplexCheckboxEmits>()
+const props = withDefaults(defineProps<MComplexCheckboxProps>(), {
+  value: undefined,
+  label: undefined,
+  color: 'primary',
+  modelValue: () => [],
+  rounded: 'md',
+})
+
+const checked = computed(() => props.modelValue.includes(props.value))
+
+function change() {
+  const values = [...props.modelValue]
+
+  if (checked.value) {
+    values.splice(values.indexOf(props.value), 1)
+  } else {
+    values.push(props.value)
+  }
+  emit('update:modelValue', values)
+}
     const getColors = () => {
       let colors = ''
       switch (props.color) {     
@@ -68,23 +46,21 @@ export default defineComponent({
       }
       return colors
     }
-    return () => {
-      return h('label', 
-      {
-        class: 'ml-2 text-sm text-gray-900'
-      },
-      [h(
-        'input',
-        {
-          type: 'checkbox',
-          ...attrs,
-          class: [...classes.value],
-          value: props.modelValue,
-          onChange: (val:any) => emit('update:modelValue', Boolean(!props.modelValue))
-        },
-        slotDefault), props.label]
-      )
-    }
-  },
-})
 </script>
+
+<template>
+  <label
+    class="ml-2 text-sm text-gray-900"
+  >
+    <input
+      type="checkbox"
+      class="'h-4 w-4 mr-2"
+      :class="[getColors(), props.rounded && `rounded-${props.rounded}`,]"
+      :checked="checked"
+      :value="props.value"
+      v-bind="$attrs"
+      @change="change"
+    />
+    <slot>{{ props.label }}</slot>
+  </label>
+</template>

@@ -51,6 +51,7 @@ const data = ref<RowData[] | []>([])
 const searchValue = ref()
 const modalShow = ref(false)
 const selectedUser = ref()
+const selectedItems = ref([])
 onMounted(() => {
   api.get('api/users').then((response) => {
     data.value = response.data.users
@@ -89,13 +90,13 @@ onMounted(() => {
       </div>
       <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex flex-col mt-2">
-          <MDataTable show-select :search="searchValue" :loading="isLoading" :columns="columns" :items="data">
+          <MDataTable v-model="selectedItems" show-select :search="searchValue" :loading="isLoading" :columns="columns" :items="data">
             <template #item.username="{ item }">
               <div class="flex items-center">
                 <div class="flex-shrink-0 h-10 w-10">
                   <img
                     class="h-10 w-10 rounded-full"
-                    src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=4&w=256&h=256&q=60"
+                    src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=256&h=256&q=80"
                     alt=""
                   />
                 </div>

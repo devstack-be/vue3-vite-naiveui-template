@@ -6,7 +6,7 @@ import {
 } from '@heroicons/vue/outline'
 import { computed, ref, watch, watchEffect } from 'vue'
 import { useDebounce } from '@vueuse/core'
-
+import { isMatch } from 'lodash'
 export type VFlexTableWrapperSortFunction<T = any> = (parameters: {
   key: string
   column: Partial<any>
@@ -24,6 +24,7 @@ export interface MDataTableHeaderType {
   searchable?: Boolean
 }
 export interface MDataTableProps {
+  modelValue?: Array<number>
   items?: Array<any>
   columns?: Array<MDataTableHeaderType>
   loading?: boolean
@@ -39,6 +40,7 @@ const emits = defineEmits<{
   (e: 'update:sort', value: any): void
   (e: 'update:limit', value: any): void
   (e: 'update:page', value: any): void
+  (e: 'update:modelValue', value: Array<number>): void
 }>()
 
 const props = withDefaults(defineProps<MDataTableProps>(), {
@@ -49,7 +51,7 @@ const props = withDefaults(defineProps<MDataTableProps>(), {
   limit: undefined,
   total: undefined,
   page: undefined,
-  showSelect: false
+  showSelect: false,
 })
 //Data//
 const rawData = ref<any[]>()
@@ -195,10 +197,20 @@ const data = computed(() => {
 })
 const total = computed(() => props.total ?? sortedItems.value?.length ?? 0)
 const start = computed(() => (page.value - 1) * limit.value)
-const totalPages = computed(() =>
-  total.value ? Math.ceil(total.value / limit.value) : 0
+const selectedRows = ref([])
+const isAllSelectedOnPage = computed(
+  () => data.value && data.value?.length > 0 && data.value?.map((_) => _.id).every((val) => selectedRows.value.includes(val))
 )
-
+function toggleSelectAll() {
+  if (isAllSelectedOnPage.value) {
+    selectedRows.value = selectedRows.value.filter(value => !data.value?.map((_) => _.id).includes(value));
+  } else {
+    selectedRows.value = selectedRows.value.concat(data.value?.map((_) => _.id).filter(v => !selectedRows.value.includes(v)))
+  }
+}
+watch(selectedRows, (val) => {
+  emits('update:modelValue', val)
+})
 watch([searchTerm, limit], () => {
   if (page.value !== 1) {
     page.value = 1
@@ -217,22 +229,27 @@ watch([searchTerm, limit], () => {
       <div class="w-3 h-3 bg-indigo-600 rounded-full opacity-50"></div>
       <div class="w-3 h-3 bg-indigo-800 rounded-full opacity-50"></div>
     </div>
-
     <table class="min-w-full divide-y divide-gray-200">
       <thead class="bg-gray-100">
         <tr>
-          <th v-if="showSelect" class="py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                  <MCheckbox
-                        name="checkbox_full"
-                        id="checkbox_full"
-                        rounded="md"
-                      />
+          <th
+            v-if="showSelect"
+            class="py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+          >
+                <MCheckbox
+                  :checked="isAllSelectedOnPage"
+                  name="all_selected"
+                  @click.stop="toggleSelectAll()"
+                />
           </th>
           <th
             v-for="(column, k) in columns"
             :key="k"
             scope="col"
-            :class="column.align === 'start' ? 'pr-6 pl-2' : 'px-6', column.sortable && 'cursor-pointer' "
+            :class="
+              [column.align === 'start' ? 'pr-6 pl-2' : 'px-6',
+              column.sortable && 'cursor-pointer']
+            "
             class="py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
             @click.prevent="sort = nextSort(column.value)"
           >
@@ -262,17 +279,17 @@ watch([searchTerm, limit], () => {
         </Transition>
         <TransitionGroup name="list">
           <tr v-for="(item, i) in data" :key="i">
-          <td v-if="showSelect" class="text-sm text-gray-500 py-4 whitespace-nowrap">
-                                              <MCheckbox
-                        name="checkbox_full"
-                        id="checkbox_full"
-                        rounded="md"
-                      />
-          </td>
+            <td v-if="showSelect" class="text-sm text-gray-500 py-4 whitespace-nowrap">
+              <MCheckbox
+                  v-model="selectedRows"
+                  :value="item.id"
+                  name="all_selected"
+                />
+            </td>
             <td
               v-for="(column, k) in columns"
               :key="k"
-              :class="column.cellClass, column.align === 'start' ? 'pr-6 pl-2' : 'px-6'"
+              :class="[column.cellClass, column.align === 'start' ? 'pr-6 pl-2' : 'px-6']"
               class="text-sm text-gray-500 py-4 whitespace-nowrap"
             >
               <slot :name="`item.${column.value}`" :item="item">
