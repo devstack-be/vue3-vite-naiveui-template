@@ -6,7 +6,6 @@ import {
 } from '@heroicons/vue/outline'
 import { computed, ref, watch, watchEffect } from 'vue'
 import { useDebounce } from '@vueuse/core'
-import { isMatch } from 'lodash'
 export type VFlexTableWrapperSortFunction<T = any> = (parameters: {
   key: string
   column: Partial<any>

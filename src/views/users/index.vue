@@ -114,13 +114,11 @@ onMounted(() => {
               <MLabel :color="item.is_active ? 'success' : 'gray'"> {{ item.is_active ? 'Active' : 'Not active' }}</MLabel>
             </template>
             <template #item.actions="{ item }">
-              <span @click.prevent="router.push({name: 'users.edit', params: {id: item.id}})" class="cursor-pointer text-indigo-600 hover:text-indigo-900"
-                >Edit</span
+              <button @click.prevent="router.push({name: 'users.edit', params: {id: item.id}})"
+                ><Icon type="PencilIconOutline" class="h-5 w-5 text-gray-400 hover:text-gray-500" /></button
               >
-              <span
-                @click.prevent=";(selectedUser = item.id), (modalShow = true)"
-                class="cursor-pointer text-red-600 hover:text-red-900"
-                >Delete</span
+              <button @click.prevent=";(selectedUser = item.id), (modalShow = true)"
+                ><Icon type="TrashIconOutline" class="h-5 w-5 text-gray-400 hover:text-gray-500" /></button
               >
             </template>
           </MDataTable>

@@ -25,8 +25,9 @@
 </template>
 
 <script lang="ts" setup>
-import { ExclamationCircleIcon as ExclamationCircleIconSolid } from '@heroicons/vue/solid'
+import { ExclamationCircleIcon as ExclamationCircleIconSolid, TrashIcon as TrashIconSolid } from '@heroicons/vue/solid'
 import {
+  TrashIcon as TrashIconOutline,
   PencilIcon as PencilIconOutline,
   PlusIcon as PlusIconOutline,
   UserIcon as UserIconOutline,
@@ -38,6 +39,8 @@ import {
 } from '@heroicons/vue/outline'
 
 const icons = {
+  TrashIconSolid,
+  TrashIconOutline,
   PencilIconOutline,
   PlusIconOutline,
   UserIconOutline,

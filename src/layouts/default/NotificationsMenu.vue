@@ -70,7 +70,7 @@ const people = [
         class="z-10 origin-top-right absolute right-0 mt-2 w-80 rounded-md py-2 shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none"
       >
         <div class="text-center mt-2 text-gray-800"><span class="relative">Notifications<span class="-top-1.5 -right-2.5 absolute block h-2 w-2 rounded-full ring-2 ring-white bg-indigo-500 animate-pulse" /></span></div>
-        <div class="flow-root mt-4 p-5 py-2 bg-white max-h-[16rem] overflow-scroll">
+        <div class="flow-root mt-4 p-5 py-2 bg-white max-h-[16rem] has-slimscroll">
           <ul role="list" class="-my-5 divide-y divide-gray-200">
             <li v-for="person in people" :key="person.handle" class="py-4">
               <div class="flex items-center space-x-4">

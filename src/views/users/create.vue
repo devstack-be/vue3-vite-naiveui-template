@@ -153,7 +153,7 @@ const handleCreateClick = async (e: MouseEvent) => {
                   <MField class="flex items-center col-span-6 sm:col-span-3">
                     <MControl>
                       <MSimpleCheckbox
-                        label="Is active"
+                        label="Account activated"
                         name="is_active"
                         id="is_active"
                         v-model="formValue.is_active"
