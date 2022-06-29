@@ -78,6 +78,11 @@ const handleCreateClick = async (e: MouseEvent) => {
 <template>
   <main class="flex-1 pb-8">
     <div>
+            <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="md:flex md:items-center md:justify-between">
+          <RouterLink :to="{name: 'users'}" class="leading-6 mt-5 text-gray-400 text-sm">Back to Users</RouterLink>
+        </div>
+      </div>
       <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="md:flex md:items-center md:justify-between">
           <h2 class="mt-8 text-lg leading-6 font-medium text-gray-900">Create User</h2>

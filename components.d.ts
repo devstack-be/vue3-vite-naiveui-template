@@ -8,7 +8,6 @@ declare module '@vue/runtime-core' {
     Icon: typeof import('./src/components/Icon.vue')['default']
     MButton: typeof import('./src/components/MButton.vue')['default']
     MCheckbox: typeof import('./src/components/forms/MCheckbox.vue')['default']
-    MComplexCheckbox: typeof import('./src/components/forms/MComplexCheckbox.vue')['default']
     MControl: typeof import('./src/components/forms/MControl.vue')['default']
     MDataTable: typeof import('./src/components/table/MDataTable.vue')['default']
     MField: typeof import('./src/components/forms/MField.vue')['default']
@@ -22,7 +21,6 @@ declare module '@vue/runtime-core' {
     PreLoader: typeof import('./src/components/PreLoader.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
-    VCheckbox: typeof import('./src/components/forms/VCheckbox.vue')['default']
   }
 }
 

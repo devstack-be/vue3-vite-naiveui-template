@@ -14,7 +14,7 @@ const userStore = useUserStore()
             <MenuButton
               class="max-w-xs bg-white rounded-full flex items-center text-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cyan-500 lg:p-2 lg:rounded-md lg:hover:bg-gray-50"
             >
-              <img class="h-8 w-8 rounded-full" src="@/assets/logo.png" alt="" />
+              <img class="h-8 w-8 rounded-full" src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=256&h=256&q=80" alt="" />
               <span class="hidden ml-3 text-gray-700 text-sm font-medium lg:block"
                 ><span class="sr-only">Open user menu for </span
                 >{{ userStore.user.username }}</span

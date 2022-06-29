@@ -108,6 +108,11 @@ onMounted(() => {
     <div v-if="user">
       <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="md:flex md:items-center md:justify-between">
+          <RouterLink :to="{name: 'users'}" class="leading-6 mt-5 text-gray-400 text-sm">Back to Users</RouterLink>
+        </div>
+      </div>
+      <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="md:flex md:items-center md:justify-between">
           <h2 class="mt-8 text-lg leading-6 font-medium text-gray-900">Edit User</h2>
         </div>
       </div>
@@ -158,7 +163,11 @@ onMounted(() => {
                       />
                     </MControl>
                   </MField>
-                  <MField class="col-span-6 sm:col-span-3" label="Lastname" for="lastname">
+                  <MField
+                    class="col-span-6 sm:col-span-3"
+                    label="Lastname"
+                    for="lastname"
+                  >
                     <MControl
                       :has-error="v$.lastname.$error"
                       :errors="v$.lastname.$errors"
@@ -210,6 +219,6 @@ onMounted(() => {
         </div>
       </div>
     </div>
-    <PreLoader v-else/>
+    <PreLoader v-else />
   </main>
 </template>

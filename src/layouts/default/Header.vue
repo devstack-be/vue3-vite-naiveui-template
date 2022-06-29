@@ -1,11 +1,11 @@
 <script lang="ts" setup>
 import {
   MenuAlt1Icon,
-  BellIcon,
 } from '@heroicons/vue/outline'
 import { useThemeStore } from '@/stores/theme'
 import LanguagesMenu from './LanguagesMenu.vue'
 import ProfileMenu from './ProfileMenu.vue'
+import NotificationsMenu from './NotificationsMenu.vue'
 import SearchBar from './SearchBar.vue';
 const themeStore = useThemeStore()
 </script>
@@ -26,14 +26,7 @@ const themeStore = useThemeStore()
     <div class="flex-1 px-4 flex justify-between sm:px-6 lg:max-w-6xl lg:mx-auto lg:px-8">
       <SearchBar/>
       <div class="ml-4 flex items-center md:ml-6">
-        <button
-          type="button"
-          class="bg-white p-1 rounded-full text-gray-400 hover:text-gray-500"
-        >
-          <span class="sr-only">View notifications</span>
-          <BellIcon class="h-6 w-6" aria-hidden="true" />
-        </button>
-
+        <NotificationsMenu/>
         <!-- Profile dropdown -->
          <ProfileMenu/>
          <!-- Language dropdown -->
