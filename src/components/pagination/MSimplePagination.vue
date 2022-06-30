@@ -72,10 +72,10 @@ fr:
 </i18n>
 <template>
   <nav
-    class="bg-gray-100 px-4 py-3 flex items-center justify-between border-t border-gray-200 sm:px-6"
+    class="bg-gray-50 px-4 py-3 flex items-center justify-between border-t border-gray-200 sm:px-6"
     aria-label="Pagination"
   >
-    <div class="hidden sm:block">
+    <div>
       <p class="text-sm text-gray-700">
         <i18n-t keypath="info">
           <template v-slot:start>

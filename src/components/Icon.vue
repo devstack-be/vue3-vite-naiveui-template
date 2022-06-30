@@ -27,6 +27,7 @@
 <script lang="ts" setup>
 import { ExclamationCircleIcon as ExclamationCircleIconSolid, TrashIcon as TrashIconSolid } from '@heroicons/vue/solid'
 import {
+  FilterIcon as FilterIconOutline,
   TrashIcon as TrashIconOutline,
   PencilIcon as PencilIconOutline,
   PlusIcon as PlusIconOutline,
@@ -39,6 +40,7 @@ import {
 } from '@heroicons/vue/outline'
 
 const icons = {
+  FilterIconOutline,
   TrashIconSolid,
   TrashIconOutline,
   PencilIconOutline,

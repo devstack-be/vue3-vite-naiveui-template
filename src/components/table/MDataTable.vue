@@ -198,13 +198,20 @@ const total = computed(() => props.total ?? sortedItems.value?.length ?? 0)
 const start = computed(() => (page.value - 1) * limit.value)
 const selectedRows = ref([])
 const isAllSelectedOnPage = computed(
-  () => data.value && data.value?.length > 0 && data.value?.map((_) => _.id).every((val) => selectedRows.value.includes(val))
+  () =>
+    data.value &&
+    data.value?.length > 0 &&
+    data.value?.map((_) => _.id).every((val) => selectedRows.value.includes(val))
 )
 function toggleSelectAll() {
   if (isAllSelectedOnPage.value) {
-    selectedRows.value = selectedRows.value.filter(value => !data.value?.map((_) => _.id).includes(value));
+    selectedRows.value = selectedRows.value.filter(
+      (value) => !data.value?.map((_) => _.id).includes(value)
+    )
   } else {
-    selectedRows.value = selectedRows.value.concat(data.value?.map((_) => _.id).filter(v => !selectedRows.value.includes(v)))
+    selectedRows.value = selectedRows.value.concat(
+      data.value?.map((_) => _.id).filter((v) => !selectedRows.value.includes(v))
+    )
   }
 }
 watch(selectedRows, (val) => {
@@ -218,7 +225,7 @@ watch([searchTerm, limit], () => {
 </script>
 <template>
   <div
-    class="align-middle min-w-full overflow-x-auto shadow overflow-hidden sm:rounded-lg"
+    class="align-middle min-w-full overflow-x-auto shadow overflow-hidden rounded-lg"
   >
     <div
       v-if="loading"
@@ -228,27 +235,83 @@ watch([searchTerm, limit], () => {
       <div class="w-3 h-3 bg-indigo-600 rounded-full opacity-50"></div>
       <div class="w-3 h-3 bg-indigo-800 rounded-full opacity-50"></div>
     </div>
+    <div
+      class="bg-white flex flex-col md:flex-row md:items-center py-3 border-b border-gray-200 dark:border-gray-700"
+    >
+      <div class="flex items-center flex-1">
+        <div class="h-9 ml-auto flex items-center pr-2 md:pr-3">
+          <div class="hidden md:flex px-2"><!----></div>
+          <!----><!---->
+          <div
+            class="flex h-9 hover:bg-gray-100 dark:hover:bg-gray-700 rounded"
+            dusk="filter-selector"
+          >
+            <button
+              aria-expanded="false"
+              class="rounded active:outline-none active:ring focus:outline-none focus:ring"
+              type="button"
+            >
+              <span class="sr-only">Filter Dropdown</span>
+              <div
+                class="toolbar-button flex items-center cursor-pointer select-none toolbar-button px-2"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  width="24"
+                  height="24"
+                  class="inline-block"
+                  role="presentation"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"
+                  ></path></svg
+                ><!----><svg
+                  class="flex-shrink-0 ml-2"
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="10"
+                  height="6"
+                  viewBox="0 0 10 6"
+                >
+                  <path
+                    class="fill-current"
+                    d="M8.292893.292893c.390525-.390524 1.023689-.390524 1.414214 0 .390524.390525.390524 1.023689 0 1.414214l-4 4c-.390525.390524-1.023689.390524-1.414214 0l-4-4c-.390524-.390525-.390524-1.023689 0-1.414214.390525-.390524 1.023689-.390524 1.414214 0L5 3.585786 8.292893.292893z"
+                  ></path>
+                </svg>
+              </div>
+            </button>
+          </div>
+          <!---->
+        </div>
+      </div>
+      <!---->
+    </div>
     <table class="min-w-full divide-y divide-gray-200">
-      <thead class="bg-gray-100">
+      <thead class="bg-gray-50">
         <tr>
           <th
             v-if="showSelect"
             class="py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
           >
-                <MCheckbox
-                  :checked="isAllSelectedOnPage"
-                  name="all_selected"
-                  @click.stop="toggleSelectAll()"
-                />
+            <MCheckbox
+              :checked="isAllSelectedOnPage"
+              name="all_selected"
+              @click.stop="toggleSelectAll()"
+            />
           </th>
           <th
             v-for="(column, k) in columns"
             :key="k"
             scope="col"
-            :class="
-              [column.align === 'start' ? 'pr-6 pl-2' : 'px-6',
-              column.sortable && 'cursor-pointer']
-            "
+            :class="[
+              column.align === 'start' ? 'pr-6 pl-2' : 'px-6',
+              column.sortable && 'cursor-pointer',
+            ]"
             class="py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
             @click.prevent="sort = nextSort(column.value)"
           >
@@ -279,11 +342,7 @@ watch([searchTerm, limit], () => {
         <TransitionGroup name="list">
           <tr v-for="(item, i) in data" :key="i">
             <td v-if="showSelect" class="text-sm text-gray-500 py-4 whitespace-nowrap">
-              <MCheckbox
-                  v-model="selectedRows"
-                  :value="item.id"
-                  name="all_selected"
-                />
+              <MCheckbox v-model="selectedRows" :value="item.id" name="all_selected" />
             </td>
             <td
               v-for="(column, k) in columns"

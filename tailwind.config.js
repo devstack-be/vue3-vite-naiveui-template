@@ -26,7 +26,7 @@ module.exports = {
         '64': '14rem',
       },
       fontFamily: {
-        'sans': ['Inter', 'Proxima Nova', ...defaultTheme.fontFamily.sans],
+        'sans': ['Nunito', 'Inter', 'Proxima Nova', ...defaultTheme.fontFamily.sans],
       },
       colors: {
         sky: colors.sky,
