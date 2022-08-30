@@ -5,6 +5,8 @@ import type { FormInst, FormRules, FormValidationError } from "naive-ui";
 import { useApi } from "@/composables/useApi";
 import { useUserStore } from "@/stores/user";
 import { useRouter } from "vue-router";
+import {t} from "@/i18n"
+
 
 interface ModelType {
   email: string | null;
@@ -25,14 +27,16 @@ const rules: FormRules = {
   email: {
     required: true,
     type: "email",
+    message: t('login.email.required'),
     trigger: ["input"],
   },
   password: {
     required: true,
+    message:t('login.password.required'),
     trigger: ["input"],
   },
 };
-const handleValidateButtonClick = async (e: MouseEvent) => {
+const login = async (e: MouseEvent) => {
   e.preventDefault();
   formLoading.value = true;
   formRef.value?.validate((errors: Array<FormValidationError> | undefined) => {
@@ -44,16 +48,16 @@ const handleValidateButtonClick = async (e: MouseEvent) => {
           notification.success({
             closable: true,
             duration: 5000,
-            content: "Auth",
-            meta: `Welcome back, ${response.data.user.username}`,
+            content: t("notification.content.auth"),
+            meta: t("notification.login",{username:response.data.user.username}),
           });
           router.push("/");
         })
         .catch((error) => {
           notification.error({
             duration: 3000,
-            content: "Auth",
-            meta: error.response?.data?.message ?? "Unknown error",
+            content: t("notification.content.auth"),
+            meta: error.response?.data?.message ?? t("notification.unknownerror"),
           });
         })
         .then(() => (formLoading.value = false));
@@ -70,36 +74,22 @@ const handleValidateButtonClick = async (e: MouseEvent) => {
     Devstack
   </n-h1>
   <n-card size="large" style="--padding-bottom: 30px">
-    <n-h2 style="--font-weight: 400">Sign-in</n-h2>
+    <n-h2 style="--font-weight: 400">{{ $t('login.signin') }}</n-h2>
     <n-space vertical>
       <n-form ref="formRef" :model="formValue" :rules="rules">
-        <n-form-item-row label="E-mail" path="email">
-          <n-input
-            v-model:value="formValue.email"
-            placeholder=""
-            :input-props="{ type: 'email', autocomplete: 'off' }"
-          />
+        <n-form-item-row :label="$t('login.email')" path="email">
+          <n-input v-model:value="formValue.email" placeholder=""
+            :input-props="{ type: 'email', autocomplete: 'off' }" />
         </n-form-item-row>
-        <n-form-item-row path="password" label="Password">
-          <n-input
-            v-model:value="formValue.password"
-            placeholder=""
-            type="password"
-            @keydown.enter.prevent
-          />
+        <n-form-item-row path="password" :label="$t('login.password')">
+          <n-input v-model:value="formValue.password" placeholder="" type="password" @keydown.enter.prevent />
         </n-form-item-row>
-        <n-button
-          type="primary"
-          size="large"
-          block
-          :loading="formLoading"
-          @click="handleValidateButtonClick"
-        >
+        <n-button type="primary" size="large" block :loading="formLoading" @click="login">
           <template #icon>
             <Icon type="login" />
           </template>
-          Sign in</n-button
-        >
+          {{ $t('login.signin') }}
+        </n-button>
       </n-form>
     </n-space>
   </n-card>
@@ -116,6 +106,7 @@ const handleValidateButtonClick = async (e: MouseEvent) => {
     display: block;
   }
 }
+
 .n-card {
   margin: 0 auto;
   max-width: 380px;

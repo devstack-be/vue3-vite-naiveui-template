@@ -10,6 +10,9 @@
       <n-dropdown placement="bottom-end" :options="options">
         <n-avatar size="small" round src="/images/avatars/svg/1.svg" />
       </n-dropdown>
+      <n-dropdown @select="languageChanged" placement="bottom" :options="languageOptions">
+        {{  locale  }}
+      </n-dropdown>
       <n-button text circle type="error" @click.prevent="toggleDark()">
         <template #icon>
           <Icon v-if="isDark" type="sunny" />
@@ -24,9 +27,11 @@
 import { h, computed } from "vue";
 import { useRouter, RouterLink } from "vue-router";
 import { useUserStore } from "@/stores/user";
-import { useDark, useToggle } from "@vueuse/core";
+import { useDark, useToggle, useStorage } from '@vueuse/core';
 import { NAvatar, NText, NButton } from "naive-ui";
 import Icon from "@/components/Icon.vue";
+import { useI18n } from 'vue-i18n';
+const { t, locale, availableLocales } = useI18n({ useScope: 'global' })
 
 const userStore = useUserStore();
 const router = useRouter();
@@ -59,6 +64,19 @@ function renderCustomHeader() {
     ]
   )
 }
+
+const languageOptions = computed(() => availableLocales.map(l => {
+  return {
+    key: l,
+    label: l,
+
+  }
+}))
+
+const languageChanged = (key: string) => {
+  locale.value = key;
+  localStorage.setItem("language",key)
+}
 const options = computed(() => [
   {
     key: "header",
@@ -71,7 +89,7 @@ const options = computed(() => [
   },
   {
     key: "settings",
-    label: () => h(RouterLink, { to: "/" }, { default: () => "Settings" }),
+    label: () => h(RouterLink, { to: "/" }, { default: () => t("account.settings") }),
     icon() {
       return h(Icon, { type: "settings" });
     },
@@ -98,7 +116,7 @@ const options = computed(() => [
               circle: true,
             },
             {
-              default: () => "Sign out",
+              default: () => t("account.signout"),
               icon: () => h(Icon, { type: "logout" }),
             }
           ),

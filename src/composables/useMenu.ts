@@ -1,3 +1,4 @@
+import {t} from "@/i18n"
 export interface MenuType {
   id: string;
   label: string;
@@ -12,17 +13,17 @@ export const MenuItems = (): MenuType[] => {
   return [
     {
       id: "0",
-      label: "Dashboard",
+      label: t("navmenu.dashboard"),
       icon: "dashboard",
       name: "home",
     },
     {
       id: "1",
-      label: "Users",
+      label: t("navmenu.users"),
       icon: "users",
       children: [
-        { id: "2", label: "List", name: "users" },
-        { id: "3", label: "Create", name: "users.create" },
+        { id: "2", label: t("navmenu.users.list"), name: "users" },
+        { id: "3", label: t("navmenu.users.create"), name: "users.create" },
       ],
     },
   ];

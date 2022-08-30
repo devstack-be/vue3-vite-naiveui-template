@@ -11,10 +11,16 @@ export const useUserStore = defineStore("userStore", () => {
   const isLoading = ref(false)
   const isDark = usePreferredDark()
   const sidebarCollapsed = useStorage("sidebarCollapsed", false);
+  
 
   const toggleSidebarCollapsed = async () => {
     sidebarCollapsed.value = !sidebarCollapsed.value
   };
+  const setLanguage = async (lang: string) => {
+    localStorage.setItem("language", lang)
+    user.value.language = lang
+  }
+
   const setLoggedIn = async (data: any) => {
     token.value = data.access_token;
     user.value = data.user
@@ -32,6 +38,7 @@ export const useUserStore = defineStore("userStore", () => {
     user.value = undefined
     token.value = undefined
   };
+
   return {
     toggleSidebarCollapsed,
     sidebarCollapsed,
