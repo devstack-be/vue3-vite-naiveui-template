@@ -2,7 +2,7 @@
 
 This dashboard template should help get you started developing with Vue 3 in Vite (+ NaiveUI). 
 
-**This template is based on a nodeJS back-end (NestJS) [available soon]() for authentication, authorization and data example.**
+**This template is based on a nodeJS back-end (NestJS) [available here](https://github.com/devstack-be/nestjs-jwt-mysql-api) for authentication, authorization and data example.**
 
 ## What does this template include (dependencies)
 
