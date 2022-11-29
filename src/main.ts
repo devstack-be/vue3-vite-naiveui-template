@@ -17,11 +17,15 @@ import { createApi } from "@/composables/useApi";
 import Default from "@/layouts/default/default.vue";
 import Auth from "@/layouts/auth.vue";
 
+import i18n from "@/i18n"
+
+
 const app = createApp(App);
 createApi();
 app.use(naive);
 app.use(moshaToast);
 app.use(createPinia());
+app.use(i18n)
 app.use(router);
 app.component("DefaultLayout", Default)
 app.component("AuthLayout", Auth)

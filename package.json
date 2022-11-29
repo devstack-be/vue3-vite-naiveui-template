@@ -23,9 +23,11 @@
     "sass": "^1.52.1",
     "vfonts": "^0.0.3",
     "vue": "^3.2.33",
+    "vue-i18n": "9",
     "vue-router": "^4.0.14"
   },
   "devDependencies": {
+    "@intlify/vite-plugin-vue-i18n": "^6.0.1",
     "@rushstack/eslint-patch": "^1.1.0",
     "@types/node": "^16.11.27",
     "@types/nprogress": "^0.2.0",

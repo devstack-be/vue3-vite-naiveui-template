@@ -1,8 +1,8 @@
 <template>
   <n-result
     status="success"
-    title="Dashboard"
-    description="A dashboard template based on Vue.js 3, Vite and Naive-UI"
+    :title="$t('dashboard.title')"
+    :description="$t('dashboard.subtitle')"
     size="huge"
   >
     <template #footer>

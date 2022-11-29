@@ -4,6 +4,7 @@ import { useNotification } from "naive-ui"
 import type { FormInst, FormRules, FormItemRule, FormItemInst } from "naive-ui"
 import { useApi } from "@/composables/useApi"
 import { useRouter } from "vue-router";
+import {t} from "@/i18n"
 
 interface ModelType {
   password: string | null;
@@ -50,41 +51,47 @@ const rules: FormRules = {
     required: true,
     type: "email",
     trigger: ["input"],
+    message: t("user.create.email.required"),
   },
   password: {
     required: true,
     trigger: ["input"],
+    message: t("user.create.password.required"),
   },
   username: {
     required: true,
     trigger: ["input"],
+    message: t("user.create.username.required"),
   },
   confirm_password: [
     {
       required: true,
-      message: "Re-entered password is required",
+      message: t("user.create.repassword.required"),
       trigger: ["input"],
     },
     {
       validator: validatePasswordStartWith,
-      message: "Password is not same as re-entered password!",
+      message: t("user.create.password.notsame"),
       trigger: "input",
     },
     {
       validator: validatePasswordSame,
-      message: "Password is not same as re-entered password!",
+      message: t("user.create.password.notsame"),
       trigger: ["input", "password-input"],
     },
   ],
   firstname: {
     required: false,
     trigger: ["input"],
+    message: t("user.create.firstname.required"),
   },
   lastname: {
     trigger: ["input"],
+    message: t("user.create.lastname.required"),
   },
   is_active: {
     required: true,
+    message: t("user.create.activated.required"),
   },
 }
 const handleValidateButtonClick = async (e: MouseEvent) => {
@@ -115,21 +122,21 @@ const handleValidateButtonClick = async (e: MouseEvent) => {
   <n-space vertical>
     <n-form ref="formRef" :model="formValue" :rules="rules">
       <n-grid :span="24" :x-gap="24">
-        <n-form-item-gi :span="12" label="E-mail" path="email">
+        <n-form-item-gi :span="12" :label="$t('user.create.email')" path="email">
           <n-input
             v-model:value="formValue.email"
             placeholder=""
             :input-props="{ type: 'email', autocomplete: 'off' }"
           />
         </n-form-item-gi>
-        <n-form-item-gi :span="12" label="Username" path="username">
+        <n-form-item-gi :span="12" :label="$t('user.create.username')" path="username">
           <n-input
             v-model:value="formValue.username"
             placeholder=""
             :input-props="{ autocomplete: 'none' }"
           />
         </n-form-item-gi>
-        <n-form-item-gi :span="12" path="password" label="Password">
+        <n-form-item-gi :span="12" path="password" :label="$t('user.create.password')">
           <n-input
             v-model:value="formValue.password"
             placeholder=""
@@ -143,7 +150,7 @@ const handleValidateButtonClick = async (e: MouseEvent) => {
           :span="12"
           first
           path="confirm_password"
-          label="Re-enter Password"
+          :label="$t('user.create.rePassword')"
         >
           <n-input
             v-model:value="formValue.confirm_password"
@@ -153,15 +160,15 @@ const handleValidateButtonClick = async (e: MouseEvent) => {
             @keydown.enter.prevent
           />
         </n-form-item-gi>
-        <n-form-item-gi :span="12" label="Firstname" path="firstname">
+        <n-form-item-gi :span="12" :label="$t('user.create.firstName')" path="firstname">
           <n-input v-model:value="formValue.firstname" placeholder="" />
         </n-form-item-gi>
-        <n-form-item-gi :span="12" label="Lastname" path="lastname">
+        <n-form-item-gi :span="12" :label="$t('user.create.lastName')" path="lastname">
           <n-input v-model:value="formValue.lastname" placeholder="" />
         </n-form-item-gi>
-        <n-form-item-gi :span="12" label="Activated" path="is_active">
+        <n-form-item-gi :span="12" :label="$t('user.create.activated')" path="is_active">
           <n-checkbox v-model:checked="formValue.is_active">
-            Activated
+            {{t("user.create.activated")}}
           </n-checkbox>
         </n-form-item-gi>
       </n-grid>
@@ -177,7 +184,7 @@ const handleValidateButtonClick = async (e: MouseEvent) => {
               <template #icon>
                 <Icon type="create" />
               </template>
-              Create
+              {{t("user.create.button")}}
             </n-button>
           </div>
         </n-col>

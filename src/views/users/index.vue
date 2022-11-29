@@ -4,7 +4,7 @@ import { NButton, NTag, useNotification } from "naive-ui"
 import Icon from "@/components/Icon.vue"
 import { useRouter } from "vue-router"
 import { useApi } from "@/composables/useApi"
-
+import {t} from "@/i18n"
 const api = useApi()
 const router = useRouter()
 const notification = useNotification();
@@ -26,28 +26,28 @@ const columns = [
     type: "selection",
   },
   {
-    title: "Email",
+    title: t("users.table.email"),
     key: "email",
     sorter: "default",
   },
   {
-    title: "Username",
+    title: t("users.table.username"),
     key: "username",
     sorter: "default",
   },
   {
-    title: "Active",
+    title: t("users.table.active"),
     key: "is_active",
     render(row) {
       return h(
         NTag,
-        { size: "small", type: row.is_active ? "success" : "error" },
-        { default: () => (row.is_active ? "Activated" : "Disabled") }
+        { size: "small", type: row.is_active ? t("common.success") :t("common.error") },
+        { default: () => (row.is_active ? t("users.table.activated") :t("users.table.disabled")) }
       )
     },
   },
   {
-    title: "Action",
+    title: t("users.table.actions"),
     key: "actions",
     render(row) {
       return [
@@ -104,7 +104,7 @@ onMounted(() => {
     <n-space>
       <n-input
         v-model:value="searchValue"
-        placeholder="Search..."
+        :placeholder="$t('users.table.search')"
         @input="searchTrigger"
       />
     </n-space>

@@ -74,7 +74,7 @@ router.beforeEach(async (to, from) => {
       createToast(
         {
           title: "Auth",
-          description: "Your session is invalid!",
+          description: t("notification.invalidSession"),
         },
         {
           type: "danger",
